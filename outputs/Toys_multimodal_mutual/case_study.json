@@ -1,0 +1,596 @@
+{
+  "1": {
+    "title": "Days of Wonder Ticket To Ride.",
+    "degree": 20,
+    "behavior_neighbors": [
+      {
+        "item_id": 6,
+        "title": "Ticket to Ride: USA 1910 Expansion.",
+        "weight": 45.0,
+        "behavior_score": 45.0
+      },
+      {
+        "item_id": 2952,
+        "title": "Pandemic Board Game.",
+        "weight": 42.0,
+        "behavior_score": 42.0
+      },
+      {
+        "item_id": 12990,
+        "title": "7 Wonders.",
+        "weight": 31.0,
+        "behavior_score": 31.0
+      },
+      {
+        "item_id": 1624,
+        "title": "Splendor.",
+        "weight": 23.0,
+        "behavior_score": 23.0
+      },
+      {
+        "item_id": 5362,
+        "title": "Arcane Wonders Sheriff of Nottingham.",
+        "weight": 22.0,
+        "behavior_score": 22.0
+      },
+      {
+        "item_id": 1407,
+        "title": "Ticket To Ride - Europe.",
+        "weight": 21.0,
+        "behavior_score": 21.0
+      },
+      {
+        "item_id": 2147,
+        "title": "King of Tokyo Board Game - First edition.",
+        "weight": 20.0,
+        "behavior_score": 20.0
+      },
+      {
+        "item_id": 2191,
+        "title": "Alderac Entertainment Group AEG Love Letter.",
+        "weight": 19.0,
+        "behavior_score": 19.0
+      },
+      {
+        "item_id": 17283,
+        "title": "Small World.",
+        "weight": 19.0,
+        "behavior_score": 19.0
+      },
+      {
+        "item_id": 898,
+        "title": "Spot It! 5 Year Anniversary.",
+        "weight": 18.0,
+        "behavior_score": 18.0
+      }
+    ],
+    "multimodal_neighbors": [
+      {
+        "item_id": 6,
+        "title": "Ticket to Ride: USA 1910 Expansion.",
+        "weight": 0.6268506850177331,
+        "behavior_score": 45.0,
+        "normalized_behavior_score": 0.6333561672144936,
+        "text_similarity": 0.8270673155784607,
+        "image_similarity": 0.653393030166626,
+        "semantic_strength": 0.7402301728725433,
+        "cross_modal_consistency": 0.8263257145881653,
+        "multimodal_reliability": 0.6116712265586255,
+        "final_score": 0.6268506850177331
+      },
+      {
+        "item_id": 1407,
+        "title": "Ticket To Ride - Europe.",
+        "weight": 0.6079602554563853,
+        "behavior_score": 21.0,
+        "normalized_behavior_score": 0.5113382524546614,
+        "text_similarity": 0.8468432426452637,
+        "image_similarity": 0.8368333578109741,
+        "semantic_strength": 0.8418383002281189,
+        "cross_modal_consistency": 0.9899901151657104,
+        "multimodal_reliability": 0.8334115957937414,
+        "final_score": 0.6079602554563853
+      },
+      {
+        "item_id": 2952,
+        "title": "Pandemic Board Game.",
+        "weight": 0.5741066644040628,
+        "behavior_score": 42.0,
+        "normalized_behavior_score": 0.6221996376017008,
+        "text_similarity": 0.4611401855945587,
+        "image_similarity": 0.5033169984817505,
+        "semantic_strength": 0.4822285920381546,
+        "cross_modal_consistency": 0.9578231871128082,
+        "multimodal_reliability": 0.4618897269429074,
+        "final_score": 0.5741066644040628
+      },
+      {
+        "item_id": 12990,
+        "title": "7 Wonders.",
+        "weight": 0.5381254122879003,
+        "behavior_score": 31.0,
+        "normalized_behavior_score": 0.5733222259958265,
+        "text_similarity": 0.6583214998245239,
+        "image_similarity": 0.468021035194397,
+        "semantic_strength": 0.5631712675094604,
+        "cross_modal_consistency": 0.809699535369873,
+        "multimodal_reliability": 0.4559995136360726,
+        "final_score": 0.5381254122879003
+      },
+      {
+        "item_id": 1624,
+        "title": "Splendor.",
+        "weight": 0.5251994385345645,
+        "behavior_score": 23.0,
+        "normalized_behavior_score": 0.5257321814041689,
+        "text_similarity": 0.6308241486549377,
+        "image_similarity": 0.532001793384552,
+        "semantic_strength": 0.5814129710197449,
+        "cross_modal_consistency": 0.9011776447296143,
+        "multimodal_reliability": 0.5239563718388212,
+        "final_score": 0.5251994385345645
+      },
+      {
+        "item_id": 5362,
+        "title": "Arcane Wonders Sheriff of Nottingham.",
+        "weight": 0.49748968582883113,
+        "behavior_score": 22.0,
+        "normalized_behavior_score": 0.5186917220153283,
+        "text_similarity": 0.7265843749046326,
+        "image_similarity": 0.473332941532135,
+        "semantic_strength": 0.5999586582183838,
+        "cross_modal_consistency": 0.7467485666275024,
+        "multimodal_reliability": 0.44801826806033773,
+        "final_score": 0.49748968582883113
+      },
+      {
+        "item_id": 2191,
+        "title": "Alderac Entertainment Group AEG Love Letter.",
+        "weight": 0.490564511628481,
+        "behavior_score": 19.0,
+        "normalized_behavior_score": 0.4955714871909448,
+        "text_similarity": 0.7852833867073059,
+        "image_similarity": 0.5193869471549988,
+        "semantic_strength": 0.6523351669311523,
+        "cross_modal_consistency": 0.7341035604476929,
+        "multimodal_reliability": 0.478881568649399,
+        "final_score": 0.490564511628481
+      },
+      {
+        "item_id": 5363,
+        "title": "Takenoko.",
+        "weight": 0.48421444721422147,
+        "behavior_score": 15.0,
+        "normalized_behavior_score": 0.4586577807966612,
+        "text_similarity": 0.6957454681396484,
+        "image_similarity": 0.56113600730896,
+        "semantic_strength": 0.6284407377243042,
+        "cross_modal_consistency": 0.8653905391693115,
+        "multimodal_reliability": 0.5438466688551955,
+        "final_score": 0.48421444721422147
+      },
+      {
+        "item_id": 5158,
+        "title": "Sushi Go! - The Pick and Pass Card Game.",
+        "weight": 0.4817808441464688,
+        "behavior_score": 18.0,
+        "normalized_behavior_score": 0.48708625157527846,
+        "text_similarity": 0.7357604503631592,
+        "image_similarity": 0.49718910455703735,
+        "semantic_strength": 0.6164747774600983,
+        "cross_modal_consistency": 0.7614286541938782,
+        "multimodal_reliability": 0.46940156014591317,
+        "final_score": 0.4817808441464688
+      },
+      {
+        "item_id": 132,
+        "title": "Puerto Rico Game.",
+        "weight": 0.47798927642932765,
+        "behavior_score": 15.0,
+        "normalized_behavior_score": 0.4586577807966612,
+        "text_similarity": 0.7227771282196045,
+        "image_similarity": 0.5468150973320007,
+        "semantic_strength": 0.6347961127758026,
+        "cross_modal_consistency": 0.8240379691123962,
+        "multimodal_reliability": 0.523096099572216,
+        "final_score": 0.47798927642932765
+      }
+    ]
+  },
+  "5": {
+    "title": "Hasbro Connect 4 Game.",
+    "degree": 20,
+    "behavior_neighbors": [
+      {
+        "item_id": 4408,
+        "title": "Sorry! 2013 Edition Game.",
+        "weight": 64.0,
+        "behavior_score": 64.0
+      },
+      {
+        "item_id": 3,
+        "title": "Jenga Classic Game.",
+        "weight": 54.0,
+        "behavior_score": 54.0
+      },
+      {
+        "item_id": 8,
+        "title": "Trouble Game.",
+        "weight": 43.0,
+        "behavior_score": 43.0
+      },
+      {
+        "item_id": 2,
+        "title": "Hasbro Chutes and Ladders.",
+        "weight": 26.0,
+        "behavior_score": 26.0
+      },
+      {
+        "item_id": 1681,
+        "title": "Battleship Game.",
+        "weight": 23.0,
+        "behavior_score": 23.0
+      },
+      {
+        "item_id": 3763,
+        "title": "Hasbro 04700 Candy Land Kingdom of Sweet Adventures Board Game for Kids Ages 3 and Up (Amazon Exclusive), Red.",
+        "weight": 20.0,
+        "behavior_score": 20.0
+      },
+      {
+        "item_id": 898,
+        "title": "Spot It! 5 Year Anniversary.",
+        "weight": 18.0,
+        "behavior_score": 18.0
+      },
+      {
+        "item_id": 3895,
+        "title": "Monopoly Board Game.",
+        "weight": 17.0,
+        "behavior_score": 17.0
+      },
+      {
+        "item_id": 1684,
+        "title": "Let's Go Fishin'.",
+        "weight": 15.0,
+        "behavior_score": 15.0
+      },
+      {
+        "item_id": 5159,
+        "title": "Don't Break the Ice.",
+        "weight": 15.0,
+        "behavior_score": 15.0
+      }
+    ],
+    "multimodal_neighbors": [
+      {
+        "item_id": 3,
+        "title": "Jenga Classic Game.",
+        "weight": 0.6970646204045814,
+        "behavior_score": 54.0,
+        "normalized_behavior_score": 0.6629164040481104,
+        "text_similarity": 0.7950049042701721,
+        "image_similarity": 0.7808260917663574,
+        "semantic_strength": 0.7879154980182648,
+        "cross_modal_consistency": 0.9858211874961853,
+        "multimodal_reliability": 0.776743791903014,
+        "final_score": 0.6970646204045814
+      },
+      {
+        "item_id": 8,
+        "title": "Trouble Game.",
+        "weight": 0.6698007421187067,
+        "behavior_score": 43.0,
+        "normalized_behavior_score": 0.6260026976538267,
+        "text_similarity": 0.776589035987854,
+        "image_similarity": 0.7927237749099731,
+        "semantic_strength": 0.7846564054489136,
+        "cross_modal_consistency": 0.9838652610778809,
+        "multimodal_reliability": 0.7719961792034269,
+        "final_score": 0.6698007421187067
+      },
+      {
+        "item_id": 4408,
+        "title": "Sorry! 2013 Edition Game.",
+        "weight": 0.6650971272558381,
+        "behavior_score": 64.0,
+        "normalized_behavior_score": 0.6905514640662181,
+        "text_similarity": 0.8235780000686646,
+        "image_similarity": 0.6472184062004089,
+        "semantic_strength": 0.7353982031345367,
+        "cross_modal_consistency": 0.8236404061317444,
+        "multimodal_reliability": 0.6057036746982849,
+        "final_score": 0.6650971272558381
+      },
+      {
+        "item_id": 1681,
+        "title": "Battleship Game.",
+        "weight": 0.5983080687148926,
+        "behavior_score": 23.0,
+        "normalized_behavior_score": 0.5257321814041689,
+        "text_similarity": 0.7677121162414551,
+        "image_similarity": 0.7679373025894165,
+        "semantic_strength": 0.7678247094154358,
+        "cross_modal_consistency": 0.9997748136520386,
+        "multimodal_reliability": 0.767651805773248,
+        "final_score": 0.5983080687148926
+      },
+      {
+        "item_id": 2,
+        "title": "Hasbro Chutes and Ladders.",
+        "weight": 0.5684256791994599,
+        "behavior_score": 26.0,
+        "normalized_behavior_score": 0.545216537420019,
+        "text_similarity": 0.8340167999267578,
+        "image_similarity": 0.6647866368293762,
+        "semantic_strength": 0.749401718378067,
+        "cross_modal_consistency": 0.8307698369026184,
+        "multimodal_reliability": 0.6225803433514887,
+        "final_score": 0.5684256791994599
+      },
+      {
+        "item_id": 1432,
+        "title": "Twister Game.",
+        "weight": 0.5534597749715435,
+        "behavior_score": 14.0,
+        "normalized_behavior_score": 0.44798144259928724,
+        "text_similarity": 0.8060113191604614,
+        "image_similarity": 0.8263645172119141,
+        "semantic_strength": 0.8161879181861877,
+        "cross_modal_consistency": 0.9796468019485474,
+        "multimodal_reliability": 0.7995758838401414,
+        "final_score": 0.5534597749715435
+      },
+      {
+        "item_id": 3763,
+        "title": "Hasbro 04700 Candy Land Kingdom of Sweet Adventures Board Game for Kids Ages 3 and Up (Amazon Exclusive), Red.",
+        "weight": 0.548002121540837,
+        "behavior_score": 20.0,
+        "normalized_behavior_score": 0.5036426404215542,
+        "text_similarity": 0.7751166820526123,
+        "image_similarity": 0.6741824150085449,
+        "semantic_strength": 0.7246495485305786,
+        "cross_modal_consistency": 0.8990657329559326,
+        "multimodal_reliability": 0.6515075774858303,
+        "final_score": 0.548002121540837
+      },
+      {
+        "item_id": 3895,
+        "title": "Monopoly Board Game.",
+        "weight": 0.5415073039043542,
+        "behavior_score": 17.0,
+        "normalized_behavior_score": 0.4781421368125113,
+        "text_similarity": 0.8258596658706665,
+        "image_similarity": 0.7185660600662231,
+        "semantic_strength": 0.7722128629684448,
+        "cross_modal_consistency": 0.8927063941955566,
+        "multimodal_reliability": 0.6893593604519879,
+        "final_score": 0.5415073039043542
+      },
+      {
+        "item_id": 1684,
+        "title": "Let's Go Fishin'.",
+        "weight": 0.5359284190614764,
+        "behavior_score": 15.0,
+        "normalized_behavior_score": 0.4586577807966612,
+        "text_similarity": 0.7164928913116455,
+        "image_similarity": 0.717719554901123,
+        "semantic_strength": 0.7171062231063843,
+        "cross_modal_consistency": 0.9987733364105225,
+        "multimodal_reliability": 0.7162265750127119,
+        "final_score": 0.5359284190614764
+      },
+      {
+        "item_id": 3433,
+        "title": "Hungry Hungry Hippos.",
+        "weight": 0.527270446359072,
+        "behavior_score": 15.0,
+        "normalized_behavior_score": 0.4586577807966612,
+        "text_similarity": 0.6909099817276001,
+        "image_similarity": 0.7086462378501892,
+        "semantic_strength": 0.6997781097888947,
+        "cross_modal_consistency": 0.9822637438774109,
+        "multimodal_reliability": 0.6873666660046975,
+        "final_score": 0.527270446359072
+      }
+    ]
+  },
+  "83": {
+    "title": "Nerf N-Strike Elite Strongarm Blaster.",
+    "degree": 20,
+    "behavior_neighbors": [
+      {
+        "item_id": 551,
+        "title": "Nerf N-Strike Elite Dart Refill Pack (75 Darts).",
+        "weight": 84.0,
+        "behavior_score": 84.0
+      },
+      {
+        "item_id": 4016,
+        "title": "Official Nerf N-Strike Elite Series 30-Dart Refill.",
+        "weight": 51.0,
+        "behavior_score": 51.0
+      },
+      {
+        "item_id": 838,
+        "title": "Nerf N-Strike Elite Retaliator.",
+        "weight": 38.0,
+        "behavior_score": 38.0
+      },
+      {
+        "item_id": 3967,
+        "title": "Nerf Zombie Strike Hammershot Blaster.",
+        "weight": 32.0,
+        "behavior_score": 32.0
+      },
+      {
+        "item_id": 3742,
+        "title": "Official Nerf N-Strike Elite Series 100-Dart Refill.",
+        "weight": 27.0,
+        "behavior_score": 27.0
+      },
+      {
+        "item_id": 18369,
+        "title": "Nerf Zombie Strike FlipFury Blaster.",
+        "weight": 24.0,
+        "behavior_score": 24.0
+      },
+      {
+        "item_id": 1556,
+        "title": "Nerf Rampage N-Strike Elite Toy Blaster with 25 Dart Drum Slam Fire and 25 Official Elite Foam Darts For Kids, Teens, and Adults.",
+        "weight": 21.0,
+        "behavior_score": 21.0
+      },
+      {
+        "item_id": 11182,
+        "title": "Official Nerf N-Strike Elite Series Suction Darts 30-Pack.",
+        "weight": 20.0,
+        "behavior_score": 20.0
+      },
+      {
+        "item_id": 2813,
+        "title": "Official Nerf Zombie Strike 30-Dart Refill Pack.",
+        "weight": 19.0,
+        "behavior_score": 19.0
+      },
+      {
+        "item_id": 1557,
+        "title": "Nerf N-Strike Jolt Blaster (blue).",
+        "weight": 17.0,
+        "behavior_score": 17.0
+      }
+    ],
+    "multimodal_neighbors": [
+      {
+        "item_id": 551,
+        "title": "Nerf N-Strike Elite Dart Refill Pack (75 Darts).",
+        "weight": 0.6710155496690099,
+        "behavior_score": 84.0,
+        "normalized_behavior_score": 0.7349292557567882,
+        "text_similarity": 0.9104691743850708,
+        "image_similarity": 0.6010231971740723,
+        "semantic_strength": 0.7557461857795715,
+        "cross_modal_consistency": 0.6905540227890015,
+        "multimodal_reliability": 0.5218835687975272,
+        "final_score": 0.6710155496690099
+      },
+      {
+        "item_id": 3967,
+        "title": "Nerf Zombie Strike Hammershot Blaster.",
+        "weight": 0.614846588596988,
+        "behavior_score": 32.0,
+        "normalized_behavior_score": 0.578412653062169,
+        "text_similarity": 0.8888405561447144,
+        "image_similarity": 0.7453574538230896,
+        "semantic_strength": 0.817099004983902,
+        "cross_modal_consistency": 0.8565168976783752,
+        "multimodal_reliability": 0.699859104844899,
+        "final_score": 0.614846588596988
+      },
+      {
+        "item_id": 4016,
+        "title": "Official Nerf N-Strike Elite Series 30-Dart Refill.",
+        "weight": 0.6090052906243093,
+        "behavior_score": 51.0,
+        "normalized_behavior_score": 0.6536377576719345,
+        "text_similarity": 0.9142611026763916,
+        "image_similarity": 0.5868937373161316,
+        "semantic_strength": 0.7505774199962616,
+        "cross_modal_consistency": 0.67263263463974,
+        "multimodal_reliability": 0.5048628675131841,
+        "final_score": 0.6090052906243093
+      },
+      {
+        "item_id": 838,
+        "title": "Nerf N-Strike Elite Retaliator.",
+        "weight": 0.5854999442171929,
+        "behavior_score": 38.0,
+        "normalized_behavior_score": 0.6060477130802769,
+        "text_similarity": 0.9654964804649353,
+        "image_similarity": 0.6365725994110107,
+        "semantic_strength": 0.801034539937973,
+        "cross_modal_consistency": 0.6710761189460754,
+        "multimodal_reliability": 0.53755515020333,
+        "final_score": 0.5854999442171929
+      },
+      {
+        "item_id": 18369,
+        "title": "Nerf Zombie Strike FlipFury Blaster.",
+        "weight": 0.5512486774577038,
+        "behavior_score": 24.0,
+        "normalized_behavior_score": 0.5324851935852285,
+        "text_similarity": 0.8901821374893188,
+        "image_similarity": 0.6585777401924133,
+        "semantic_strength": 0.7743799388408661,
+        "cross_modal_consistency": 0.7683956027030945,
+        "multimodal_reliability": 0.5950301398268127,
+        "final_score": 0.5512486774577038
+      },
+      {
+        "item_id": 3742,
+        "title": "Official Nerf N-Strike Elite Series 100-Dart Refill.",
+        "weight": 0.5482193171556136,
+        "behavior_score": 27.0,
+        "normalized_behavior_score": 0.5512326850132117,
+        "text_similarity": 0.9185206890106201,
+        "image_similarity": 0.6213990449905396,
+        "semantic_strength": 0.7699598670005798,
+        "cross_modal_consistency": 0.7028783559799194,
+        "multimodal_reliability": 0.541188125487885,
+        "final_score": 0.5482193171556136
+      },
+      {
+        "item_id": 12984,
+        "title": "Nerf CS-18 N-Strike Elite Rapidstrike (Colors may vary).",
+        "weight": 0.5412114170499673,
+        "behavior_score": 17.0,
+        "normalized_behavior_score": 0.4781421368125113,
+        "text_similarity": 0.9247894883155823,
+        "image_similarity": 0.7478750944137573,
+        "semantic_strength": 0.8363322913646698,
+        "cross_modal_consistency": 0.823085606098175,
+        "multimodal_reliability": 0.6883730709373648,
+        "final_score": 0.5412114170499673
+      },
+      {
+        "item_id": 1556,
+        "title": "Nerf Rampage N-Strike Elite Toy Blaster with 25 Dart Drum Slam Fire and 25 Official Elite Foam Darts For Kids, Teens, and Adults.",
+        "weight": 0.5350496088562429,
+        "behavior_score": 21.0,
+        "normalized_behavior_score": 0.5113382524546614,
+        "text_similarity": 0.9194434285163879,
+        "image_similarity": 0.6647682189941406,
+        "semantic_strength": 0.7921058237552643,
+        "cross_modal_consistency": 0.7453247904777527,
+        "multimodal_reliability": 0.5903761071266,
+        "final_score": 0.5350496088562429
+      },
+      {
+        "item_id": 2813,
+        "title": "Official Nerf Zombie Strike 30-Dart Refill Pack.",
+        "weight": 0.5066433374069059,
+        "behavior_score": 19.0,
+        "normalized_behavior_score": 0.4955714871909448,
+        "text_similarity": 0.8626305460929871,
+        "image_similarity": 0.593826413154602,
+        "semantic_strength": 0.7282284796237946,
+        "cross_modal_consistency": 0.731195867061615,
+        "multimodal_reliability": 0.5324776545774821,
+        "final_score": 0.5066433374069059
+      },
+      {
+        "item_id": 1557,
+        "title": "Nerf N-Strike Jolt Blaster (blue).",
+        "weight": 0.49824637692418755,
+        "behavior_score": 17.0,
+        "normalized_behavior_score": 0.4781421368125113,
+        "text_similarity": 0.9450863599777222,
+        "image_similarity": 0.6350834369659424,
+        "semantic_strength": 0.7900848984718323,
+        "cross_modal_consistency": 0.6899970769882202,
+        "multimodal_reliability": 0.545156270518099,
+        "final_score": 0.49824637692418755
+      }
+    ]
+  }
+}

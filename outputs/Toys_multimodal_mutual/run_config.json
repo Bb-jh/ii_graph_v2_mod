@@ -1,0 +1,13 @@
+{
+  "min_cooc": 2,
+  "top_k": 20,
+  "symmetrize": "mutual",
+  "lambda_multimodal": 0.3,
+  "reliability_mode": "strength_x_consistency",
+  "cosine_transform": "clip01",
+  "behavior_normalization": "log_max",
+  "missing_modality": "behavior_only",
+  "behavior_edges": 79332,
+  "multimodal_edges": 79332,
+  "topology_preserved": true
+}

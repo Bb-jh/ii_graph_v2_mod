@@ -1,0 +1,170 @@
+{
+  "898": {
+    "title": "Spot It! 5 Year Anniversary.",
+    "degree": 1624,
+    "neighbors": [
+      {
+        "item_id": 4562,
+        "title": "Qwirkle Board Game.",
+        "cooccurrence": 37
+      },
+      {
+        "item_id": 3106,
+        "title": "Perplexus Original.",
+        "cooccurrence": 34
+      },
+      {
+        "item_id": 449,
+        "title": "Educational Insights The Sneaky, Snacky Squirrel Game.",
+        "cooccurrence": 27
+      },
+      {
+        "item_id": 2449,
+        "title": "Spot It!.",
+        "cooccurrence": 27
+      },
+      {
+        "item_id": 1613,
+        "title": "ThinkFun Zingo (Discontinued by manufacturer).",
+        "cooccurrence": 27
+      },
+      {
+        "item_id": 12617,
+        "title": "Sleeping Queens Card Game, 79 Cards.",
+        "cooccurrence": 25
+      },
+      {
+        "item_id": 523,
+        "title": "The Original PlasmaCar by PlaSmart – Blue – Ride On Toy, Ages 3 yrs and Up, No batteries, gears, or pedals, Twist, Turn, Wiggle for endless fun.",
+        "cooccurrence": 25
+      },
+      {
+        "item_id": 7717,
+        "title": "Sequence for Kids.",
+        "cooccurrence": 22
+      },
+      {
+        "item_id": 162,
+        "title": "Melissa & Doug Suspend Family Game, Classic Games, Exciting Balancing Game, Develops Hand-Eye Coordination, 12.5 H x 2.8 W x 2.8 L.",
+        "cooccurrence": 22
+      },
+      {
+        "item_id": 1063,
+        "title": "Stomp Rocket The Original Jr. Glow, 4 Rockets (Packaging May Vary).",
+        "cooccurrence": 20
+      }
+    ]
+  },
+  "843": {
+    "title": "Baby Einstein Take Along Tunes Musical Toy.",
+    "degree": 898,
+    "neighbors": [
+      {
+        "item_id": 4355,
+        "title": "Bendy Ball Rattle Toy.",
+        "cooccurrence": 129
+      },
+      {
+        "item_id": 3290,
+        "title": "Fisher-Price Rattle N Rock Maracas, Green/Yellow.",
+        "cooccurrence": 70
+      },
+      {
+        "item_id": 3444,
+        "title": "VTech Touch & Swipe Baby Phone.",
+        "cooccurrence": 61
+      },
+      {
+        "item_id": 845,
+        "title": "Fisher-Price Laugh & Learn Click 'n Learn Remote.",
+        "cooccurrence": 57
+      },
+      {
+        "item_id": 1268,
+        "title": "Mega Bloks 80-Piece Big Building Bag, Classic.",
+        "cooccurrence": 45
+      },
+      {
+        "item_id": 848,
+        "title": "Sassy Wonder Wheel Activity Center.",
+        "cooccurrence": 42
+      },
+      {
+        "item_id": 1177,
+        "title": "VTech Spin and Learn Color Flashlight Amazon Exclusive, Pink.",
+        "cooccurrence": 42
+      },
+      {
+        "item_id": 369,
+        "title": "Sassy Developmental Bumpy Ball 6+ Months With Bright Colors, Bold Patterns, and Easy To Grasp Bumps To Help Developing Baby’s Motor Skills.",
+        "cooccurrence": 42
+      },
+      {
+        "item_id": 1075,
+        "title": "Baby Einstein Octoplush Plush Toy.",
+        "cooccurrence": 38
+      },
+      {
+        "item_id": 76,
+        "title": "Fisher-Price Brilliant Basics Rock-a-Stack.",
+        "cooccurrence": 34
+      }
+    ]
+  },
+  "2072": {
+    "title": "Creativity for Kids Spark!Lab Smithsonian (Invent The Greatest Board Game).",
+    "degree": 765,
+    "neighbors": [
+      {
+        "item_id": 1999,
+        "title": "Thames & Kosmos Kids First Aircraft Engineer Kit.",
+        "cooccurrence": 20
+      },
+      {
+        "item_id": 2071,
+        "title": "Creativity for Kids Spark!Lab Smithsonian Invent Super Shoes Coloring Kit.",
+        "cooccurrence": 18
+      },
+      {
+        "item_id": 4530,
+        "title": "ALEX Discover Paper Bag Puppets.",
+        "cooccurrence": 14
+      },
+      {
+        "item_id": 2074,
+        "title": "Creativity for Kids Spark!Lab Smithsonian  Invent Cool Cash Coloring Kit.",
+        "cooccurrence": 14
+      },
+      {
+        "item_id": 345,
+        "title": "ALEX Toys Little Hands Cupcake Craft.",
+        "cooccurrence": 13
+      },
+      {
+        "item_id": 2078,
+        "title": "ALEX Jr. 6 Tots Finger Paints.",
+        "cooccurrence": 13
+      },
+      {
+        "item_id": 2057,
+        "title": "Scientific Explorer Disgusting Anatomy Brain.",
+        "cooccurrence": 13
+      },
+      {
+        "item_id": 2429,
+        "title": "Blue Orange Dr. Eureka Speed Logic Game.",
+        "cooccurrence": 12
+      },
+      {
+        "item_id": 7442,
+        "title": "ALEX Toys Craft Sk8 Deck Wall Art Beat Sk8ter.",
+        "cooccurrence": 12
+      },
+      {
+        "item_id": 2056,
+        "title": "Craft-tastic – String Art Kit – Craft Kit Makes One 3D String Art Heart.",
+        "cooccurrence": 11
+      }
+    ]
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "5": {
+    "title": "Hasbro Connect 4 Game.",
+    "degree": 20,
+    "neighbors": [
+      {
+        "item_id": 4408,
+        "title": "Sorry! 2013 Edition Game.",
+        "cooccurrence": 64
+      },
+      {
+        "item_id": 3,
+        "title": "Jenga Classic Game.",
+        "cooccurrence": 54
+      },
+      {
+        "item_id": 8,
+        "title": "Trouble Game.",
+        "cooccurrence": 43
+      },
+      {
+        "item_id": 2,
+        "title": "Hasbro Chutes and Ladders.",
+        "cooccurrence": 26
+      },
+      {
+        "item_id": 1681,
+        "title": "Battleship Game.",
+        "cooccurrence": 23
+      },
+      {
+        "item_id": 3763,
+        "title": "Hasbro 04700 Candy Land Kingdom of Sweet Adventures Board Game for Kids Ages 3 and Up (Amazon Exclusive), Red.",
+        "cooccurrence": 20
+      },
+      {
+        "item_id": 898,
+        "title": "Spot It! 5 Year Anniversary.",
+        "cooccurrence": 18
+      },
+      {
+        "item_id": 3895,
+        "title": "Monopoly Board Game.",
+        "cooccurrence": 17
+      },
+      {
+        "item_id": 3433,
+        "title": "Hungry Hungry Hippos.",
+        "cooccurrence": 15
+      },
+      {
+        "item_id": 5159,
+        "title": "Don't Break the Ice.",
+        "cooccurrence": 15
+      }
+    ]
+  },
+  "35032": {
+    "title": "Metal Earth MMS201, T-34 Panzer, Konstruktionsspielzeug Metal Model.",
+    "degree": 20,
+    "neighbors": [
+      {
+        "item_id": 29420,
+        "title": "Metal Earth MMS203 Metal Model, Silver.",
+        "cooccurrence": 6
+      },
+      {
+        "item_id": 38610,
+        "title": "Metal Earth 5252 Metal Model, Silver.",
+        "cooccurrence": 4
+      },
+      {
+        "item_id": 35038,
+        "title": "Fascinations Metal Earth P-51 Mustang Airplane 3D Metal Model Kit.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 37926,
+        "title": "Fascinations Metal Earth Chrysler Building 3D Metal Model Kit.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 35037,
+        "title": "Fascinations Metal Earth 3D Laser Cut Model Military USS Arizona Ship.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 29423,
+        "title": "Fascinations Metal Earth Boeing F-15 Eagle Airplane 3D Metal Model Kit.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 24747,
+        "title": "Fascinations Star Wars R2D2 Model Kit Metal Earth Fascinations.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 5926,
+        "title": "Fascinations Metal Earth Steam Locomotive 3D Metal Model Kit.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 22144,
+        "title": "Metal Earth Fascinations MMS202 – 502464, Chi Ha Tank Construction Toy 2 Metal Board (Ages 14 +.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 35033,
+        "title": "Fascinations Metal Earth Empire State Building 3D Metal Model Kit.",
+        "cooccurrence": 3
+      }
+    ]
+  },
+  "34920": {
+    "title": "Bandai Hobby HGBF Strike Gundam Full Package Model Kit, 1/144 Scale.",
+    "degree": 20,
+    "neighbors": [
+      {
+        "item_id": 14415,
+        "title": "Bandai Hobby #58 HG Gundam Astray Red Frame Model Kit (Flight Unit), 1/144 Scale.",
+        "cooccurrence": 4
+      },
+      {
+        "item_id": 12838,
+        "title": "Bandai Hobby HGUC RX-78-2 Gundam Revive Model Kit, 1/144 Scale.",
+        "cooccurrence": 4
+      },
+      {
+        "item_id": 15340,
+        "title": "Bandai Hobby #162 HGAC XXXG-01W Wing Gundam Model Kit, 1/144 Scale.",
+        "cooccurrence": 4
+      },
+      {
+        "item_id": 36920,
+        "title": "Bandai Hobby #44 Gundam Exia Repair II, Bandai Gundam 00 Action Figure.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 21589,
+        "title": "Bandai Hobby HGBF Star Build Strike Gundam Plavsky Wing Model Kit (1/144 Scale).",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 2577,
+        "title": "Bandai Hobby HGBF Wing Gundam Zero Flame (Honoo) Gundam Build Fighters Model Kit, 1/144 Scale.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 12811,
+        "title": "Bandai Hobby HGUC Gundam F91 Action Figure.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 14417,
+        "title": "Bandai Hobby HGCE Aile Strike Gundam Model Kit (1/144 Scale).",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 29536,
+        "title": "Bandai Hobby HGBF Sengoku Astay Gundam Action Figure.",
+        "cooccurrence": 3
+      },
+      {
+        "item_id": 35108,
+        "title": "Bandai Hobby #22 00 Gundam HG, Bandai Double Zero Action Figure.",
+        "cooccurrence": 3
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "users": 135748,
+  "items": 47520,
+  "reconstructed_train_interactions": 887106,
+  "nodes": 47520,
+  "edges": 208016,
+  "avg_degree": 8.754882154882155,
+  "max_degree": 1624,
+  "density": 0.00018423961267876332,
+  "isolated_nodes": 15248,
+  "connected_components": 15679,
+  "largest_component": 31263,
+  "weight_mean": 3.117510191523729,
+  "weight_max": 421
+}
