@@ -1,0 +1,60 @@
+{
+  "status": "complete",
+  "source_graph": "C:\\Users\\User\\Downloads\\ii_graph_v2_mod\\outputs\\Toys_multimodal_mutual\\multimodal_behavior_graph.npz",
+  "source_sha256": "5d7ae49fd2ed82446d96d7c82dd29b35a4e35bc4a46f49339bd4dd6b71b0f6bc",
+  "parameters": {
+    "graph": "outputs\\Toys_multimodal_mutual\\multimodal_behavior_graph.npz",
+    "output": "outputs\\Toys_multimodal_hierarchy_smoke",
+    "item_ids": null,
+    "metadata": "data\\Toys.item.json",
+    "epochs": 1,
+    "dim": 128,
+    "layers": 3,
+    "batch_size": 4096,
+    "lr": 0.001,
+    "reg": 1e-05,
+    "seed": 42,
+    "global_k": 32,
+    "local_k": 8,
+    "fine_k": 4,
+    "min_cluster_size": 10,
+    "threads": 4,
+    "cpu": true,
+    "prepare_only": false,
+    "smoke": true
+  },
+  "run_kind": "integration_smoke_not_quality_evaluation",
+  "graph": {
+    "nodes": 47520,
+    "edges": 79332,
+    "components": 20151,
+    "largest_component": 26005,
+    "lcc_edges": 77740,
+    "isolated_nodes": 19267,
+    "outside_lcc_nodes": 21515,
+    "labeled_fraction": 0.547243265993266,
+    "item_id_convention": "item_ids[row] identifies original sparse adjacency row; no ID shift"
+  },
+  "source_modules": {
+    "structural_embedding.py": "83d30f4453b081b8b1c02159a9a0b95aae9286423071b2d4ac6c7dd1fe09c2d8",
+    "recursive_kmeans.py": "19dbaac2b5f22ac35a4457b70c13f9862eb68bc5020817ecb96c7c4cc35d8a7b",
+    "evaluate_hierarchy.py": "05969008fe58e0e4faa59fcd0c9510d00560bcbee863d7b4d5803caedd0dfb5a"
+  },
+  "versions": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "torch": "2.14.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1"
+  },
+  "labels": {
+    "label_counts": [
+      32,
+      256,
+      1015
+    ],
+    "valid_items": 26005,
+    "unlabeled_items": 21515
+  },
+  "elapsed_seconds": 39.005204499932006
+}

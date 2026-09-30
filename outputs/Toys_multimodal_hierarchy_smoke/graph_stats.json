@@ -1,0 +1,11 @@
+{
+  "nodes": 47520,
+  "edges": 79332,
+  "components": 20151,
+  "largest_component": 26005,
+  "lcc_edges": 77740,
+  "isolated_nodes": 19267,
+  "outside_lcc_nodes": 21515,
+  "labeled_fraction": 0.547243265993266,
+  "item_id_convention": "item_ids[row] identifies original sparse adjacency row; no ID shift"
+}

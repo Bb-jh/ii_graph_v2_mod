@@ -1,0 +1,75 @@
+[1/5] Loading embeddings...
+items      : 26,005
+embedding  : (26005, 128)
+
+[2/5] Global clustering (requested K=32)...
+global clusters : 32
+
+[3/5] Local clustering (requested K=8 per Global)...
+  G=00 items=  805 local_clusters= 8
+  G=01 items=  878 local_clusters= 8
+  G=02 items=  869 local_clusters= 8
+  G=03 items=  873 local_clusters= 8
+  G=04 items=  887 local_clusters= 8
+  G=05 items=  813 local_clusters= 8
+  G=06 items=  733 local_clusters= 8
+  G=07 items=  845 local_clusters= 8
+  G=08 items=  832 local_clusters= 8
+  G=09 items=  761 local_clusters= 8
+  G=10 items=  819 local_clusters= 8
+  G=11 items=  901 local_clusters= 8
+  G=12 items=  751 local_clusters= 8
+  G=13 items=  852 local_clusters= 8
+  G=14 items=  817 local_clusters= 8
+  G=15 items=  670 local_clusters= 8
+  G=16 items=  905 local_clusters= 8
+  G=17 items=  885 local_clusters= 8
+  G=18 items=  764 local_clusters= 8
+  G=19 items=  778 local_clusters= 8
+  G=20 items=  732 local_clusters= 8
+  G=21 items=  738 local_clusters= 8
+  G=22 items=  721 local_clusters= 8
+  G=23 items=  893 local_clusters= 8
+  G=24 items=  841 local_clusters= 8
+  G=25 items=  828 local_clusters= 8
+  G=26 items=  779 local_clusters= 8
+  G=27 items=  776 local_clusters= 8
+  G=28 items=  795 local_clusters= 8
+  G=29 items=  805 local_clusters= 8
+  G=30 items=  854 local_clusters= 8
+  G=31 items=  805 local_clusters= 8
+
+[4/5] Fine clustering (requested K=4 per Local)...
+
+[5/5] Saving hierarchical labels...
+
+========== HIERARCHY COMPLETE ==========
+
+GLOBAL
+clusters : 32
+size     : min=670 / mean=812.66 / median=815.00 / max=905
+
+LOCAL
+clusters : 256
+size     : min=20 / mean=101.58 / median=99.00 / max=274
+
+FINE
+clusters : 1,015
+size     : min=1 / mean=25.62 / median=22.00 / max=149
+
+Sample labels:
+ item_id  global_label  local_label  fine_label
+       0            19            0           1
+       1            13            2           2
+       2            13            0           3
+       3            20            0           2
+       4             9            1           1
+       5            19            6           3
+       6            13            5           3
+       7            20            4           1
+       8            13            0           3
+       9            31            2           1
+
+Saved:
+C:\Users\User\Downloads\ii_graph_v2_mod\outputs\Toys_multimodal_hierarchy_smoke\hierarchical_labels.csv
+C:\Users\User\Downloads\ii_graph_v2_mod\outputs\Toys_multimodal_hierarchy_smoke\cluster_stats.json

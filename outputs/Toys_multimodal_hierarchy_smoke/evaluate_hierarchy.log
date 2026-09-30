@@ -1,0 +1,45 @@
+[1/4] Loading graph and hierarchy...
+full graph edges : 79,332
+LCC nodes        : 26,005
+label rows       : 26,005
+
+[2/4] Mapping LCC edges...
+LCC edges        : 77,740
+
+[3/4] Evaluating hierarchy...
+
+[4/4] Results
+
+========== HIERARCHY EVALUATION ==========
+
+GLOBAL
+clusters              : 32
+intra edges           : 25,599 / 77,740
+intra edge ratio      : 0.3293
+intra mean weight     : 0.3653
+intra median weight   : 0.3575
+intra density         : 0.002413
+
+LOCAL
+clusters              : 256
+intra edges           : 19,532 / 77,740
+intra edge ratio      : 0.2512
+intra mean weight     : 0.3706
+intra median weight   : 0.3632
+intra density         : 0.013395
+parent edge retention : 0.7630
+
+FINE
+clusters              : 1,015
+intra edges           : 17,029 / 77,740
+intra edge ratio      : 0.2191
+intra mean weight     : 0.3713
+intra median weight   : 0.3637
+intra density         : 0.034721
+parent edge retention : 0.8719
+
+---------- Expected pattern ----------
+Intra edge ratio: Global >= Local >= Fine (expected by nested partition)
+Mean weight / density: ideally Global < Local < Fine
+
+Saved: C:\Users\User\Downloads\ii_graph_v2_mod\outputs\Toys_multimodal_hierarchy_smoke\hierarchy_evaluation.json

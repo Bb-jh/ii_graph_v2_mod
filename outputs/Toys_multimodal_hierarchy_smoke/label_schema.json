@@ -1,0 +1,25 @@
+{
+  "labels_shape": [
+    47520,
+    3
+  ],
+  "columns": [
+    "global_id",
+    "local_id",
+    "fine_id"
+  ],
+  "label_counts": [
+    32,
+    256,
+    1015
+  ],
+  "valid_items": 26005,
+  "unlabeled_items": 21515,
+  "unlabeled_value": -1,
+  "row_mapping": "item_ids[row] is the item identity; MACRec default IDs equal row index",
+  "labels": "Each column has globally unique contiguous cluster IDs within this run",
+  "path_labels": "Original recursive K-means (global, local-within-global, fine-within-local) IDs",
+  "parents": "local_parent[local_id] = global_id; fine_parent[fine_id] = local_id",
+  "training": "Filter with valid_mask before indexing embeddings or computing guidance losses",
+  "scope": "Largest connected component only; not semantic ground truth; IDs are run-specific"
+}

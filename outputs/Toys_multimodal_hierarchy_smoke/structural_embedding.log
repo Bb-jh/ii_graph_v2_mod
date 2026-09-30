@@ -1,0 +1,24 @@
+device : cpu
+
+[1/5] Loading graph...
+original nodes : 47,520
+LCC nodes      : 26,005
+
+[2/5] Building LCC graph...
+LCC edges : 77,740
+
+[3/5] Building normalized adjacency...
+C:\Users\User\Downloads\ii_graph_v2_mod\pseudo\hierarchical-pseudo-label\src\structural_embedding.py:137: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\Context.cpp:855.)
+  norm_adj = torch.sparse_coo_tensor(
+
+[4/5] Training LightGCN...
+training edges : 77,740
+[epoch 001] loss=0.656421
+
+[5/5] Extracting embeddings...
+
+========== COMPLETE ==========
+embedding shape : (26005, 128)
+mean norm       : 1.0000
+
+saved : C:\Users\User\Downloads\ii_graph_v2_mod\outputs\Toys_multimodal_hierarchy_smoke\structural_embeddings.npy
