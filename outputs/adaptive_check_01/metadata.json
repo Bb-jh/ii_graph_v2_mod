@@ -1,0 +1,13 @@
+{
+  "mode": "synthetic_demo",
+  "source": null,
+  "temperatures": [
+    0.05,
+    0.1,
+    0.2
+  ],
+  "floor": 0.2,
+  "synthetic_seed": 42,
+  "caveat": "Weight attenuation only; no evidence of downstream quality or over-suppression.",
+  "retained_definition": "sum(variant)/sum(CN) over usable rows; undefined when sum(CN)=0"
+}

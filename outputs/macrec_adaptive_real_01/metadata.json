@@ -1,0 +1,50 @@
+{
+  "mode": "real_embeddings_student_original_proxy",
+  "parameters": {
+    "data": "data",
+    "hierarchy": "outputs/Toys_multimodal_hierarchy_smoke",
+    "graph_dir": "outputs/Toys_multimodal_mutual",
+    "output": "outputs/macrec_adaptive_real_01",
+    "sample_size": 1024,
+    "candidates": 64,
+    "seed": 42,
+    "temperatures": [
+      0.05,
+      0.1,
+      0.2
+    ]
+  },
+  "embedding_shapes": {
+    "Text": [
+      47520,
+      4096
+    ],
+    "Image": [
+      47520,
+      768
+    ]
+  },
+  "alignment": {
+    "Text": {
+      "edges": 512,
+      "max_cosine_error": 8.344650268554688e-07
+    },
+    "Image": {
+      "edges": 512,
+      "max_cosine_error": 3.5762786865234375e-07
+    }
+  },
+  "graph_sha256": "5d7ae49fd2ed82446d96d7c82dd29b35a4e35bc4a46f49339bd4dd6b71b0f6bc",
+  "teacher_run_kind": "integration_smoke_not_quality_evaluation",
+  "teacher_epochs": 1,
+  "labeled_items": 26005,
+  "sample_items": 1024,
+  "candidate_policy": "Uniform without replacement within parent; same candidates across modalities and temperatures; excludes self.",
+  "assignment_assumption": "Euclidean distance to means of final labels in saved normalized structural embedding; upstream clustering code unavailable.",
+  "limitations": [
+    "No trained RQ student: N is Graph-Original discrepancy proxy.",
+    "One-epoch smoke teacher, not converged teacher.",
+    "Graph itself used these modalities for edge reweighting; M is not independent validation.",
+    "Weight ratios are not gradient or downstream performance ratios."
+  ]
+}
