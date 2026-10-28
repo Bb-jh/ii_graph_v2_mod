@@ -1,0 +1,30 @@
+{
+  "version": "industrial_5core_v2",
+  "status": "frozen_candidate",
+  "dataset_statistics": {
+    "interactions": 412947,
+    "users": 50985,
+    "items": 25848
+  },
+  "split_counts": {
+    "full": 412947,
+    "train": 310977,
+    "valid": 50985,
+    "test": 50985,
+    "eligible_users": 50985,
+    "train_only_short_users": 0
+  },
+  "cold_start_audit": {
+    "valid_test_events_item_absent_from_train": 542,
+    "distinct_valid_test_items_absent_from_train": 94,
+    "policy": "not removed; decide evaluation protocol before final baseline runs"
+  },
+  "file_sha256": {
+    "full.jsonl": "171465eb540781d142149b414cf4da4073b62eb75635a311c33691105351ef8e",
+    "train.jsonl": "26a01932cf38b088072b24472152d37c8334d803f5428ab2ee25e636fdf01f87",
+    "valid.jsonl": "8782d24b0231dd3c6b192b046b2a797501090bf40ed675fcf3973699457919c0",
+    "test.jsonl": "ef2c4a9f39cab07b63c41f30d12b815b21472e6a3360e2e47b3b9780bbbbf515",
+    "item_mapping.tsv": "d21528f474b33749aecfc48ab4e93e78450c93ec2da05642522354f6efc37fd7",
+    "manifest.json": "91050172e1cb505d43046839e85ba0ef15ef5c03e723448796ce61c7fe6e5eca"
+  }
+}
