@@ -1,0 +1,1 @@
+shared_data/Industrial_and_Scientific/5core_v2/*.npz filter=lfs diff=lfs merge=lfs -text

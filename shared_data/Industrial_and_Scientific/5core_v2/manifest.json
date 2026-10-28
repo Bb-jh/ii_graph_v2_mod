@@ -1,0 +1,31 @@
+{
+  "variant": "5core",
+  "statistics": {
+    "interactions": 412947,
+    "users": 50985,
+    "items": 25848
+  },
+  "output_counts": {
+    "full": 412947,
+    "train": 310977,
+    "valid": 50985,
+    "test": 50985,
+    "eligible_users": 50985,
+    "train_only_short_users": 0
+  },
+  "deduplication": {
+    "policy": "one event per (user,item); earliest timestamp, tie original file order",
+    "events_removed_prior_to_core": 66900
+  },
+  "five_core": {
+    "policy": "iterative degree >= 5 on deduplicated interactions, before split",
+    "iterations": 10
+  },
+  "split_policy": "chronological leave-last-two-out for users with >=3 events; short users train-only",
+  "cold_start_audit": {
+    "valid_test_events_item_absent_from_train": 542,
+    "distinct_valid_test_items_absent_from_train": 94,
+    "policy": "not removed; decide evaluation protocol before final baseline runs"
+  },
+  "graph_policy": "build behavior graph using train.jsonl only; never validation/test interactions"
+}
