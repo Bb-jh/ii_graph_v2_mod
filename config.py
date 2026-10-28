@@ -3,6 +3,7 @@
 Research decisions that are not fixed yet stay here so they can be changed
 without touching graph-construction code.
 """
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
@@ -10,13 +11,21 @@ from typing import Optional
 
 @dataclass
 class DataConfig:
-    raw_data_dir: Path = Path("/data/amazon2018")
-    categories: tuple[str, ...] = ("Beauty", "Sports_and_Outdoors", "Toys_and_Games")
+    raw_data_dir: Path = Path(os.environ.get(
+        "AMAZON2023_RAW_DIR", str(Path(__file__).resolve().parent.parent / "datasets" / "amazon2023" / "raw")
+    )).expanduser()
+
+    categories: tuple[str, ...] = (
+        "Industrial_and_Scientific",
+        "Musical_Instruments",
+        "Office_Products",
+    )
+
     cache_dir: Path = Path("./cache")
     output_dir: Path = Path("./outputs")
-    # If None, the loader searches several common Amazon-2018 filename patterns.
-    interaction_file_template: Optional[str] = None
-    metadata_file_template: Optional[str] = None
+
+    interaction_file_template: Optional[str] = "{category}.jsonl.gz"
+    metadata_file_template: Optional[str] = "meta_{category}.jsonl.gz"
 
 
 @dataclass

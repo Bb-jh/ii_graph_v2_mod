@@ -2,3 +2,8 @@
 *.md
 __pycache__/
 *.pyc
+/artifacts/embeddings/
+*.log
+
+/datasets/
+/cache/

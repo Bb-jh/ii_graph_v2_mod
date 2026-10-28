@@ -6,9 +6,17 @@ from typing import Optional
 import numpy as np
 import requests
 import torch
+from torch.nn import functional as F
 from PIL import Image
 
 from embeddings.base import BaseEmbedder, EmbeddingOutput
+
+
+def _features(output):
+    tensor = getattr(output, "pooler_output", output)
+    if not isinstance(tensor, torch.Tensor):
+        raise TypeError(f"Unexpected CLIP features type: {type(tensor)}")
+    return F.normalize(tensor.float(), dim=-1)
 
 
 class ClipEmbedder(BaseEmbedder):
@@ -26,7 +34,7 @@ class ClipEmbedder(BaseEmbedder):
         for i in range(0, len(texts), self.batch_size):
             batch = texts[i:i + self.batch_size]
             inputs = self.processor(text=batch, return_tensors="pt", padding=True, truncation=True).to(self.device)
-            out.append(self.model.get_text_features(**inputs).cpu().numpy())
+            out.append(_features(self.model.get_text_features(**inputs)).cpu().numpy())
         values = np.concatenate(out, axis=0) if out else np.empty((0, 0), dtype=np.float32)
         return EmbeddingOutput(values=values, valid_mask=np.ones(len(texts), dtype=bool))
 
@@ -46,7 +54,7 @@ class ClipEmbedder(BaseEmbedder):
             if valid_positions:
                 images = [loaded[j] for j in valid_positions]
                 inputs = self.processor(images=images, return_tensors="pt").to(self.device)
-                feats = self.model.get_image_features(**inputs).cpu().numpy()
+                feats = _features(self.model.get_image_features(**inputs)).cpu().numpy()
                 for row, pos in enumerate(valid_positions):
                     batch_vecs[pos] = feats[row]
             vectors.append(batch_vecs)
