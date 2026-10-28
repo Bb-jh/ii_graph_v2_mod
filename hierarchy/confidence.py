@@ -6,14 +6,17 @@ from scipy import sparse
 from scipy.spatial.distance import cdist
 
 
-def graph_teacher_confidence(graph, embeddings, labels, *, tau_s=5.0, chunk_size=1024):
+def graph_teacher_confidence(graph, embeddings, labels, *, tau_s=5.0, eps=1e-12, chunk_size=1024):
     """Return A/T/S/C and evidence counts, each [items, levels].
 
     embeddings must use the SAME coordinates/preprocessing as recursive K-means.
     labels contain globally unique IDs per level; -1 marks unlabeled rows.
     Centroids are reconstructed as means of the final assigned embeddings.
-    Assignment compares only siblings. A parent with one child gets A=0
-    because no assignment margin can be measured. Self edges are ignored.
+    Assignment compares only siblings; a parent with one child gets A=1 (the
+    assignment is forced). Self edges are ignored. T and n use only neighbors in
+    the same parent E_l(i); S = 1-exp(-n/tau_s[l]). A, T, S are absolute [0,1]
+    scales, so C = cbrt(A*T*S) needs no kappa or rank/percentile normalization.
+    tau_s is a scalar or one value per level. Unlabeled rows get C=0.
     """
     graph = sparse.csr_matrix(graph, dtype=np.float64, copy=True)
     graph.sum_duplicates()
@@ -26,7 +29,8 @@ def graph_teacher_confidence(graph, embeddings, labels, *, tau_s=5.0, chunk_size
     n, levels = y.shape
     if graph.shape != (n, n) or z.ndim != 2 or z.shape[0] != n or not z.shape[1]:
         raise ValueError("graph, embeddings and labels must share item rows")
-    if not np.isfinite(tau_s) or tau_s <= 0 or chunk_size < 1:
+    tau_s = np.broadcast_to(np.asarray(tau_s, dtype=np.float64), (levels,))
+    if not np.all(np.isfinite(tau_s)) or np.any(tau_s <= 0) or chunk_size < 1:
         raise ValueError("tau_s and chunk_size must be positive")
     valid = np.all(y >= 0, axis=1)
     if np.any(np.any(y >= 0, axis=1) != valid):
@@ -47,6 +51,7 @@ def graph_teacher_confidence(graph, embeddings, labels, *, tau_s=5.0, chunk_size
             rows = np.flatnonzero(valid & (parent == pid))
             clusters, inverse = np.unique(y[rows, level], return_inverse=True)
             if len(clusters) < 2:
+                assignment[rows, level] = 1
                 continue
             centers = np.zeros((len(clusters), z.shape[1]))
             np.add.at(centers, inverse, z[rows])
@@ -58,7 +63,7 @@ def graph_teacher_confidence(graph, embeddings, labels, *, tau_s=5.0, chunk_size
                 positive = distances[np.arange(len(batch)), own].copy()
                 distances[np.arange(len(batch)), own] = np.inf
                 negative = distances.min(axis=1)
-                assignment[batch, level] = np.clip((negative-positive)/(negative+1e-12), 0, 1)
+                assignment[batch, level] = np.clip((negative-positive)/(negative+eps), 0, 1)
         usable = valid[edges.row] & valid[edges.col] & (parent[edges.row] == parent[edges.col])
         src, dst, weights = edges.row[usable], edges.col[usable], edges.data[usable]
         total = np.bincount(src, weights=weights, minlength=n)

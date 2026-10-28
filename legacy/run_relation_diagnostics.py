@@ -214,8 +214,8 @@ def distribution_comparison(behavior, random):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--results", type=Path, default=Path("outputs/Toys_multimodal_mutual"))
-    parser.add_argument("--output", type=Path, default=Path("outputs/Toys_relation_diagnostics"))
+    parser.add_argument("--results", type=Path, default=Path("outputs/legacy/Toys_multimodal_mutual"))
+    parser.add_argument("--output", type=Path, default=Path("outputs/legacy/Toys_relation_diagnostics"))
     parser.add_argument("--embedding-npz", type=Path)
     parser.add_argument("--text-npy", type=Path)
     parser.add_argument("--image-npy", type=Path)

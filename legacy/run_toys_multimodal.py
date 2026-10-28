@@ -195,7 +195,7 @@ def main() -> None:
     parser.add_argument("--train", type=Path, required=True)
     parser.add_argument("--items", type=Path, required=True)
     parser.add_argument("--embedding-npz", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path("outputs/Toys_multimodal_behavior"))
+    parser.add_argument("--output", type=Path, default=Path("outputs/legacy/Toys_multimodal_behavior"))
     parser.add_argument("--min-cooc", type=int, default=2)
     parser.add_argument("--top-k", type=int, default=20)
     parser.add_argument("--symmetrize", choices=["union", "mutual"], default="mutual")

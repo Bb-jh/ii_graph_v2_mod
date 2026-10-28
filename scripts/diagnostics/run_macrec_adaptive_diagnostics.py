@@ -1,4 +1,7 @@
-"""CPU diagnostics on real MACRec embeddings; Student=Original proxy, not RQ training."""
+"""CPU diagnostics of the static gate C*M on real MACRec embeddings (no RQ training; R/N not measured).
+
+Run from the repository root: python -m scripts.diagnostics.run_macrec_adaptive_diagnostics --output DIR
+"""
 import argparse
 import csv
 import hashlib
@@ -11,8 +14,8 @@ from scipy import sparse
 import torch
 
 from hierarchy.confidence import graph_teacher_confidence
-from hierarchy.adaptive_distillation import _js
-from run_adaptive_diagnostics import summarize, weight_variants, write_csv
+from hierarchy.adaptive_distillation import contrastive_from_scores, normalize_loss
+from scripts.diagnostics.run_adaptive_diagnostics import summarize, write_csv
 
 
 def normalized_rows(z, rows):
@@ -33,17 +36,11 @@ def cosine_rows(z, anchors, candidates, chunk=16):
     return torch.from_numpy(values)
 
 
-def distribution(scores, mask, temperature):
-    logits = (scores/temperature).masked_fill(~mask, -torch.inf)
-    logits = torch.where(mask.any(-1, keepdim=True), logits, torch.zeros_like(logits))
-    return logits.softmax(-1).masked_fill(~mask, 0)
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data', type=Path, default=Path('data'))
-    parser.add_argument('--hierarchy', type=Path, default=Path('outputs/Toys_multimodal_hierarchy_smoke'))
-    parser.add_argument('--graph-dir', type=Path, default=Path('outputs/Toys_multimodal_mutual'))
+    parser.add_argument('--hierarchy', type=Path, default=Path('outputs/legacy/Toys_multimodal_hierarchy_smoke'))
+    parser.add_argument('--graph-dir', type=Path, default=Path('outputs/legacy/Toys_multimodal_mutual'))
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--sample-size', type=int, default=1024)
     parser.add_argument('--candidates', type=int, default=64)
@@ -100,34 +97,31 @@ def main():
             pool = pool[pool != item]
             chosen = rng.choice(pool, min(len(pool), args.candidates), replace=False)
             candidates[index, level, :len(chosen)] = chosen
-    usable = torch.from_numpy((candidates >= 0).sum(-1) >= 2)
+    # S = sampled in-parent candidates, P = those sharing the anchor's level label.
+    candidate = torch.from_numpy(candidates >= 0)
+    positive = candidate & torch.from_numpy(labels[np.maximum(candidates, 0), np.arange(levels)[None, :, None]]
+                                            == labels[anchors][:, :, None])
+    valid = positive.any(-1) & (candidate & ~positive).any(-1)
     c = torch.from_numpy(confidence['confidence'][anchors])
     summaries, item_rows = [], []
-    scores = {name: [] for name in ('Graph', *embeddings)}
+    scores = {name: [] for name in embeddings}
     for level in range(levels):
-        print(f'Computing level {level} sampled relation scores...', flush=True)
-        for name, z in dict(Graph=graph_z, **embeddings).items():
+        print(f'Computing level {level} sampled similarity scores...', flush=True)
+        for name, z in embeddings.items():
             scores[name].append(cosine_rows(z, anchors, candidates[:, level]))
     for modality in embeddings:
+        modality_scores = torch.stack(scores[modality], 1)
         for temperature in args.temperatures:
-            need = torch.zeros_like(c)
-            for level in range(levels):
-                mask = torch.from_numpy(candidates[:, level] >= 0)
-                teacher = distribution(scores['Graph'][level], mask, temperature)
-                original = distribution(scores[modality][level], mask, temperature)
-                need[:, level] = _js(teacher, original)
-            need.masked_fill_(~usable, 0)
-            compatibility = (1-need).masked_fill(~usable, 0)
-            result = dict(need=need, compatibility=compatibility, usable=usable)
-            prefix = dict(modality=modality, temperature=temperature, student_mode='original_proxy')
-            summaries.extend(dict(**prefix, **row) for row in summarize(result, c))
-            variants = weight_variants(c, need, compatibility)
+            loss = contrastive_from_scores(modality_scores, candidate, positive, temperature)
+            compat = (1-normalize_loss(loss, candidate, positive, valid)).clamp(0, 1).masked_fill(~valid, 0)
+            prefix = dict(modality=modality, temperature=temperature)
+            summaries.extend(dict(**prefix, **row) for row in summarize(compat, c, valid))
             for index, item in enumerate(anchors):
                 for level in range(levels):
                     item_rows.append(dict(**prefix, item_id=int(ids[item]), level=level,
-                        usable=bool(usable[index, level]), candidates=int((candidates[index, level] >= 0).sum()),
-                        C=float(c[index, level]), N_proxy=float(need[index, level]), M=float(compatibility[index, level]),
-                        **{k: float(v[index, level]) for k, v in variants.items()}))
+                        valid=bool(valid[index, level]), candidates=int(candidate[index, level].sum()),
+                        positives=int(positive[index, level].sum()), C=float(c[index, level]),
+                        M=float(compat[index, level]), CM=float(c[index, level]*compat[index, level])))
     args.output.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(args.output/'confidence.npz', item_ids=ids, **confidence)
     np.savez_compressed(args.output/'candidates.npz', anchors=anchors, candidates=candidates)
@@ -141,19 +135,21 @@ def main():
             row.update({key+'_mean': float(values.mean()), key+'_zero_fraction': float((values == 0).mean())})
         c_summary.append(row)
     write_csv(args.output/'confidence_summary.csv', c_summary)
-    metadata = dict(mode='real_embeddings_student_original_proxy', parameters={k: str(v) if isinstance(v, Path) else v for k,v in vars(args).items()},
+    metadata = dict(mode='real_embeddings_static_gate', parameters={k: str(v) if isinstance(v, Path) else v for k,v in vars(args).items()},
         embedding_shapes={k:list(v.shape) for k,v in embeddings.items()}, alignment=alignment,
         graph_sha256=manifest['source_sha256'], teacher_run_kind=manifest['run_kind'],
         teacher_epochs=manifest['parameters']['epochs'], labeled_items=len(nodes), sample_items=len(anchors),
         candidate_policy='Uniform without replacement within parent; same candidates across modalities and temperatures; excludes self.',
         assignment_assumption='Euclidean distance to means of final labels in saved normalized structural embedding; upstream clustering code unavailable.',
-        limitations=['No trained RQ student: N is Graph-Original discrepancy proxy.', 'One-epoch smoke teacher, not converged teacher.',
+        compatibility='M = clip(1 - (l - log|P|)/(log|S| - log|P|), 0, 1) with level-conditional SupCon on original features',
+        limitations=['No RQ training: Readiness R and Need N are not measured.', 'One-epoch smoke teacher, not converged teacher.',
+                     'Sampled candidates stand in for the training batch; |P| depends on candidate count.',
                      'Graph itself used these modalities for edge reweighting; M is not independent validation.', 'Weight ratios are not gradient or downstream performance ratios.'])
     (args.output/'metadata.json').write_text(json.dumps(metadata, indent=2, allow_nan=False)+'\n')
-    print('REAL embeddings; Student=Original proxy; one-epoch teacher')
+    print('REAL embeddings; static gate C*M; one-epoch teacher')
     for row in summaries:
-        if row['band'] == 'all':
-            print(f"{row['modality']:5s} tau={row['temperature']:.2f} L={row['level']} C={row['C_mean']:.4f} N_proxy={row['N_mean']:.4f} M={row['M_mean']:.4f} alpha={row['CNM_mean']:.4f} retained={row['CNM_retained_vs_CN']}")
+        if row['band'] == 'all' and row['count']:
+            print(f"{row['modality']:5s} tau={row['temperature']:.2f} L={row['level']} valid={row['valid_fraction']:.3f} C={row['C_mean']:.4f} M={row['M_mean']:.4f} CM={row['CM_mean']:.4f} retained={row['CM_retained_vs_C']}")
     print(f'Results: {args.output.resolve()}')
 
 

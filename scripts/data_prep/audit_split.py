@@ -21,9 +21,11 @@ def n(db,sql): return db.execute(sql).fetchone()[0]
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument('--processed-dir',type=Path,default=Path.home()/'datasets/amazon2023/processed/5core/Industrial_and_Scientific')
+    ap.add_argument('--category',default='Industrial_and_Scientific',help='Used when --processed-dir is omitted')
+    ap.add_argument('--processed-dir',type=Path)
     ap.add_argument('--embedding',type=Path)
     a=ap.parse_args()
+    a.processed_dir=a.processed_dir or Path.home()/'datasets/amazon2023/processed/5core'/a.category
     with tempfile.TemporaryDirectory(prefix='audit_split_') as t:
         db=sqlite3.connect(str(Path(t)/'audit.sqlite'))
         db.execute('CREATE TABLE events(split TEXT, uid TEXT, iid TEXT, ts INT)')

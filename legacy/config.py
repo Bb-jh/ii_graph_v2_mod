@@ -12,7 +12,7 @@ from typing import Optional
 @dataclass
 class DataConfig:
     raw_data_dir: Path = Path(os.environ.get(
-        "AMAZON2023_RAW_DIR", str(Path(__file__).resolve().parent.parent / "datasets" / "amazon2023" / "raw")
+        "AMAZON2023_RAW_DIR", str(Path(__file__).resolve().parents[2] / "datasets" / "amazon2023" / "raw")
     )).expanduser()
 
     categories: tuple[str, ...] = (

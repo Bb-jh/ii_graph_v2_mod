@@ -14,7 +14,7 @@ import subprocess
 import sys
 import time
 
-from hierarchy.pseudo_bridge import dump_json, export_training_labels, prepare_graph, read_graph
+from old_hierarchy.pseudo_bridge import dump_json, export_training_labels, prepare_graph, read_graph
 
 ROOT = Path(__file__).resolve().parent
 PSEUDO_SRC = ROOT / "pseudo" / "hierarchical-pseudo-label" / "src"
@@ -44,8 +44,8 @@ def run_stage(script, arguments, output, env):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--graph", type=Path, default=Path("outputs/Toys_multimodal_mutual/multimodal_behavior_graph.npz"))
-    parser.add_argument("--output", type=Path, default=Path("outputs/Toys_multimodal_hierarchy"))
+    parser.add_argument("--graph", type=Path, default=Path("outputs/legacy/Toys_multimodal_mutual/multimodal_behavior_graph.npz"))
+    parser.add_argument("--output", type=Path, default=Path("outputs/legacy/Toys_multimodal_hierarchy"))
     parser.add_argument("--item-ids", type=Path, help="Optional row-to-item ID NPY; defaults to numeric row indices")
     parser.add_argument("--metadata", type=Path, help="Optional MACRec Toys.item.json for case study titles")
     parser.add_argument("--epochs", type=int, default=100)

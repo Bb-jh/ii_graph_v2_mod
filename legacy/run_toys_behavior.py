@@ -391,7 +391,7 @@ def main():
         "--output",
         type=Path,
         default=Path(
-            "outputs/Toys_behavior"
+            "outputs/legacy/Toys_behavior"
         ),
     )
 

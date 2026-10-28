@@ -1,0 +1,9 @@
+{
+  "device": "cpu",
+  "graph": {"top_k": 10},
+  "pseudo": {"dim": 16, "epochs": 5, "ks": [3, 2, 2], "min_cluster_size": 3, "kmeans_init": 2},
+  "tokenizer": {"hidden": [64, 32], "latent_dim": 8, "codebook_size": 8, "gnn_hidden": 32,
+                "epochs": 6, "batch_size": 64, "warmup_start": 1, "warmup_ramp": 2, "log_every": 3},
+  "rec": {"d_model": 32, "d_ff": 64, "d_kv": 8, "layers": 1, "heads": 2, "epochs": 2,
+          "batch_size": 64, "warmup_steps": 10, "eval_every": 1, "beam": 10, "eval_batch_size": 64}
+}

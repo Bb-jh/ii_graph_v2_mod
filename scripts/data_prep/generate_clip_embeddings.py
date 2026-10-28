@@ -18,8 +18,8 @@ from transformers import CLIPModel, CLIPProcessor
 
 
 MODEL_NAME = "openai/clip-vit-base-patch32"
-DATA_ROOT = Path(__file__).resolve().parent.parent / "datasets" / "amazon2023" / "raw"
-OUTPUT_ROOT = Path(__file__).resolve().parent / "artifacts" / "embeddings"
+DATA_ROOT = Path(__file__).resolve().parents[3] / "datasets" / "amazon2023" / "raw"
+OUTPUT_ROOT = Path(__file__).resolve().parents[2] / "artifacts" / "embeddings"
 DIM = 512
 
 DATASETS = (

@@ -11,7 +11,7 @@ from scipy import sparse
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from hierarchy.pseudo_bridge import export_training_labels, prepare_graph, read_graph
+from old_hierarchy.pseudo_bridge import export_training_labels, prepare_graph, read_graph
 
 
 def example_graph():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Align full-domain CLIP embeddings with the frozen Amazon 2023 5-core item mapping.
 
-Run from repository root. Requires numpy and embeddings/precomputed.py.
+Run from repository root. Requires numpy only.
 Does not re-encode text/images or alter the original CLIP NPZ or dataset.
 """
 import argparse
@@ -14,7 +14,19 @@ import tempfile
 
 import numpy as np
 
-from embeddings.precomputed import load_precomputed
+
+
+def load_precomputed(path, target_item_ids):
+    """Rows of a CLIP NPZ (item_ids, text/image embeddings, optional valid masks) in target order."""
+    with np.load(path, allow_pickle=False) as data:
+        index = {str(item): i for i, item in enumerate(data["item_ids"].tolist())}
+        missing = [item for item in target_item_ids if item not in index]
+        if missing:
+            raise ValueError(f"Precomputed embeddings miss {len(missing)} target items; examples={missing[:5]}")
+        rows = np.asarray([index[item] for item in target_item_ids])
+        masks = [np.asarray(data[k], dtype=bool)[rows] if k in data else np.ones(len(rows), dtype=bool)
+                 for k in ("text_valid_mask", "image_valid_mask")]
+        return np.asarray(data["text_embeddings"])[rows], np.asarray(data["image_embeddings"])[rows], *masks
 
 
 def sha256(path: Path) -> str:
@@ -57,11 +69,9 @@ def main():
     if len(ids) != len(set(ids)):
         raise ValueError('Duplicate parent_asin in item_mapping.tsv')
 
-    text, image = load_precomputed(source_path, ids)
-    text_values = np.asarray(text.values, dtype=np.float32)
-    image_values = np.asarray(image.values, dtype=np.float32)
-    text_mask = np.asarray(text.valid_mask, dtype=bool)
-    image_mask = np.asarray(image.valid_mask, dtype=bool)
+    text_values, image_values, text_mask, image_mask = load_precomputed(source_path, ids)
+    text_values = np.asarray(text_values, dtype=np.float32)
+    image_values = np.asarray(image_values, dtype=np.float32)
 
     expected_shape = (len(ids), 512)
     if text_values.shape != expected_shape or image_values.shape != expected_shape:

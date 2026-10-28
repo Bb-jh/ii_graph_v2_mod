@@ -20,7 +20,7 @@ from graph.denoise import apply_cross_modal_consistency
 from graph.fusion import fuse_graphs
 from graph.multimodal_reweight import build_multimodal_behavior_graph
 from graph.semantic import build_semantic_graph, score_candidate_edges
-from hierarchy.community import detect_communities
+from old_hierarchy.community import detect_communities
 
 
 def _save_graph(g: nx.Graph, path: Path) -> None:

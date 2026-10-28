@@ -1,9 +1,11 @@
+# Pipeline (gsid/, hierarchy/, run_pipeline.py)
 numpy>=1.24
 scipy>=1.10
-networkx>=3.2
+torch>=2.0
+scikit-learn>=1.3
+transformers>=4.40
+# scripts/data_prep/generate_clip_embeddings.py
 requests>=2.31
 Pillow>=10.0
-torch>=2.0
-transformers>=4.40
-# Optional backends:
-# openai>=1.0
+# scripts/diagnostics
+matplotlib>=3.9
