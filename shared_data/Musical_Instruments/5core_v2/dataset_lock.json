@@ -1,0 +1,30 @@
+{
+  "version": "musical_5core_v2",
+  "status": "frozen_candidate",
+  "dataset_statistics": {
+    "interactions": 511836,
+    "users": 57439,
+    "items": 24587
+  },
+  "split_counts": {
+    "full": 511836,
+    "train": 396958,
+    "valid": 57439,
+    "test": 57439,
+    "eligible_users": 57439,
+    "train_only_short_users": 0
+  },
+  "cold_start_audit": {
+    "valid_test_events_item_absent_from_train": 168,
+    "distinct_valid_test_items_absent_from_train": 31,
+    "policy": "not removed; decide evaluation protocol before final baseline runs"
+  },
+  "file_sha256": {
+    "full.jsonl": "0fa1d7cfb3a71038568c76c89a74a1ef28ec0e26d2d217f68937294a58d520d8",
+    "train.jsonl": "c57d5902dfd13bdc3df584d304d4b012377668f601a3e45fc630f1c579221e81",
+    "valid.jsonl": "1a17332658762ea7b2bf2ea7c6e8aea95725ca752b47083d0c83707027887c4c",
+    "test.jsonl": "c354f50519d0c647e71505b2cbb9fe94592c88ef3cb73b66b3a82ac853edd411",
+    "item_mapping.tsv": "56e8552c3f95f0b0907bc5e4a8455d5f15d10baee50f1c5a2a1de2edc243878e",
+    "manifest.json": "f88a6596c21911881bac760a917d38dfa512f1d946555dd1eeed23a35fc320b0"
+  }
+}
