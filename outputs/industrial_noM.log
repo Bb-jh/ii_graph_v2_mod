@@ -1,0 +1,66 @@
+[data] loading Industrial from data/Industrial
+[data] items=25848 train=259992 valid=50985 test=50985 cold_items=94
+/home/bbjh/research/ii_graph_v2_mod/gsid/stage4_tokenizer.py:117: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:760.)
+  return torch.sparse_coo_tensor(torch.stack([rows, cols]), inv[rows]*values*inv[cols], (n, n)).coalesce()
+/home/bbjh/research/ii_graph_v2_mod/gsid/stage4_tokenizer.py:244: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  record[f"loss_{m}_l{level+1}"] = float(info["loss"][m][v, level].mean())
+[stage4] epoch 10/200 lam=0.000 guidance=10.7763 recon_G=0.3809 recon_T=0.5452 recon_V=0.5935 joint_unique=0.998
+[stage4] epoch 20/200 lam=0.000 guidance=10.9185 recon_G=0.3492 recon_T=0.4818 recon_V=0.5457 joint_unique=0.997
+[stage4] epoch 30/200 lam=0.000 guidance=10.9853 recon_G=0.3356 recon_T=0.4562 recon_V=0.5246 joint_unique=0.997
+[stage4] epoch 40/200 lam=0.090 guidance=6.9833 recon_G=0.3364 recon_T=0.4594 recon_V=0.5304 joint_unique=0.996
+[stage4] epoch 50/200 lam=0.190 guidance=7.1264 recon_G=0.3448 recon_T=0.4468 recon_V=0.5163 joint_unique=0.995
+[stage4] epoch 60/200 lam=0.290 guidance=7.2551 recon_G=0.3605 recon_T=0.4528 recon_V=0.5091 joint_unique=0.995
+[stage4] epoch 70/200 lam=0.390 guidance=7.2920 recon_G=0.3856 recon_T=0.4571 recon_V=0.5297 joint_unique=0.993
+[stage4] epoch 80/200 lam=0.490 guidance=7.3113 recon_G=0.3910 recon_T=0.4714 recon_V=0.5420 joint_unique=0.991
+[stage4] epoch 90/200 lam=0.500 guidance=7.3401 recon_G=0.3788 recon_T=0.4838 recon_V=0.5522 joint_unique=0.988
+[stage4] epoch 100/200 lam=0.500 guidance=7.3210 recon_G=0.3706 recon_T=0.4913 recon_V=0.5494 joint_unique=0.984
+[stage4] epoch 110/200 lam=0.500 guidance=7.3223 recon_G=0.3689 recon_T=0.4967 recon_V=0.5460 joint_unique=0.982
+[stage4] epoch 120/200 lam=0.500 guidance=7.2776 recon_G=0.3652 recon_T=0.4878 recon_V=0.5429 joint_unique=0.982
+[stage4] epoch 130/200 lam=0.500 guidance=7.3465 recon_G=0.3704 recon_T=0.4796 recon_V=0.5431 joint_unique=0.981
+[stage4] epoch 140/200 lam=0.500 guidance=7.3166 recon_G=0.3615 recon_T=0.4831 recon_V=0.5396 joint_unique=0.981
+[stage4] epoch 150/200 lam=0.500 guidance=7.2633 recon_G=0.3602 recon_T=0.4768 recon_V=0.5411 joint_unique=0.978
+[stage4] epoch 160/200 lam=0.500 guidance=7.2649 recon_G=0.3687 recon_T=0.4861 recon_V=0.5329 joint_unique=0.980
+[stage4] epoch 170/200 lam=0.500 guidance=7.3083 recon_G=0.3616 recon_T=0.4783 recon_V=0.5345 joint_unique=0.980
+[stage4] epoch 180/200 lam=0.500 guidance=7.2702 recon_G=0.3631 recon_T=0.4689 recon_V=0.5430 joint_unique=0.981
+[stage4] epoch 190/200 lam=0.500 guidance=7.2572 recon_G=0.3635 recon_T=0.4658 recon_V=0.5276 joint_unique=0.983
+[stage4] epoch 200/200 lam=0.500 guidance=7.1832 recon_G=0.3616 recon_T=0.4646 recon_V=0.5245 joint_unique=0.983
+[stage5] {"items": 25848, "tokens_per_item": 10, "vocab_size": 2320, "collided_items": 448, "collision_rate": 0.017332095326524296, "max_dedup": 10, "unique_before_dedup": 25400, "cold_items": 94}
+[stage6] epoch 5 loss=1.7123 valid NDCG@10=0.0141 HR@10=0.0242
+[stage6] epoch 10 loss=1.5124 valid NDCG@10=0.0151 HR@10=0.0264
+[stage6] epoch 15 loss=1.4255 valid NDCG@10=0.0147 HR@10=0.0262
+[stage6] epoch 20 loss=1.3794 valid NDCG@10=0.0149 HR@10=0.0284
+[stage6] epoch 25 loss=1.3421 valid NDCG@10=0.0141 HR@10=0.0258
+[stage6] epoch 30 loss=1.3172 valid NDCG@10=0.0149 HR@10=0.0278
+[stage6] epoch 35 loss=1.2880 valid NDCG@10=0.0153 HR@10=0.0274
+[stage6] epoch 40 loss=1.2665 valid NDCG@10=0.0167 HR@10=0.0294
+[stage6] epoch 45 loss=1.2456 valid NDCG@10=0.0181 HR@10=0.0322
+[stage6] epoch 50 loss=1.2294 valid NDCG@10=0.0164 HR@10=0.0294
+[stage6] epoch 55 loss=1.2132 valid NDCG@10=0.0179 HR@10=0.0338
+[stage6] epoch 60 loss=1.1973 valid NDCG@10=0.0184 HR@10=0.0322
+[stage6] epoch 65 loss=1.1843 valid NDCG@10=0.0199 HR@10=0.0354
+[stage6] epoch 70 loss=1.1712 valid NDCG@10=0.0191 HR@10=0.0358
+[stage6] epoch 75 loss=1.1593 valid NDCG@10=0.0198 HR@10=0.0362
+[stage6] epoch 80 loss=1.1482 valid NDCG@10=0.0212 HR@10=0.0374
+[stage6] epoch 85 loss=1.1382 valid NDCG@10=0.0204 HR@10=0.0370
+[stage6] epoch 90 loss=1.1271 valid NDCG@10=0.0208 HR@10=0.0384
+[stage6] epoch 95 loss=1.1181 valid NDCG@10=0.0212 HR@10=0.0384
+[stage6] epoch 100 loss=1.1069 valid NDCG@10=0.0225 HR@10=0.0398
+[stage6] epoch 105 loss=1.0975 valid NDCG@10=0.0233 HR@10=0.0422
+[stage6] epoch 110 loss=1.0889 valid NDCG@10=0.0239 HR@10=0.0430
+[stage6] epoch 115 loss=1.0794 valid NDCG@10=0.0238 HR@10=0.0438
+[stage6] epoch 120 loss=1.0710 valid NDCG@10=0.0238 HR@10=0.0428
+[stage6] epoch 125 loss=1.0627 valid NDCG@10=0.0254 HR@10=0.0468
+[stage6] epoch 130 loss=1.0550 valid NDCG@10=0.0250 HR@10=0.0450
+[stage6] epoch 135 loss=1.0479 valid NDCG@10=0.0261 HR@10=0.0458
+[stage6] epoch 140 loss=1.0411 valid NDCG@10=0.0258 HR@10=0.0466
+[stage6] epoch 145 loss=1.0343 valid NDCG@10=0.0258 HR@10=0.0464
+[stage6] epoch 150 loss=1.0280 valid NDCG@10=0.0267 HR@10=0.0488
+[stage6] epoch 155 loss=1.0228 valid NDCG@10=0.0267 HR@10=0.0484
+[stage6] epoch 160 loss=1.0186 valid NDCG@10=0.0260 HR@10=0.0464
+[stage6] epoch 165 loss=1.0140 valid NDCG@10=0.0261 HR@10=0.0468
+[stage6] epoch 170 loss=1.0102 valid NDCG@10=0.0266 HR@10=0.0484
+[stage6] epoch 175 loss=1.0075 valid NDCG@10=0.0259 HR@10=0.0468
+[stage6] early stop at epoch 175; best epoch 150
+[stage6] test {"all": {"count": 50985, "HR@1": 0.006766696087084437, "HR@5": 0.023516720604099244, "HR@10": 0.037795430028439735, "NDCG@5": 0.015156616566389773, "NDCG@10": 0.019739980070722418}, "warm": {"count": 50653, "HR@1": 0.006811047716818353, "HR@5": 0.023670858586855664, "HR@10": 0.038043156377707145, "NDCG@5": 0.015255959087070512, "NDCG@10": 0.019869363787056685}, "cold": {"count": 332, "HR@1": 0.0, "HR@5": 0.0, "HR@10": 0.0, "NDCG@5": 0.0, "NDCG@10": 0.0}}
+[done] /home/bbjh/research/ii_graph_v2_mod/outputs/industrial_noM

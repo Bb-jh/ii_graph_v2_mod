@@ -1,0 +1,13 @@
+{
+  "seconds": 0.4656386375427246,
+  "stats": {
+    "items": 25848,
+    "tokens_per_item": 10,
+    "vocab_size": 2319,
+    "collided_items": 163,
+    "collision_rate": 0.00630609718353451,
+    "max_dedup": 9,
+    "unique_before_dedup": 25685,
+    "cold_items": 94
+  }
+}

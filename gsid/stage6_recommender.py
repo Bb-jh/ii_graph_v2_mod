@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from transformers import T5Config, T5ForConditionalGeneration
+from transformers import LogitsProcessor, LogitsProcessorList, T5Config, T5ForConditionalGeneration
 
 from .stage5_sid import EOS, PAD, TASK_REC, TASK_T2V, TASK_V2T
 
@@ -57,11 +57,27 @@ class SIDTrie:
                 nxt.setdefault(tuple(row[:depth]), set()).add(row[depth])
         self.next = {k: sorted(v) for k, v in nxt.items()}
 
-    def allowed(self, _batch, sequence):
-        prefix = tuple(sequence.tolist()[1:])  # drop decoder start token
+    def allowed(self, prefix):
         if len(prefix) < self.length:
             return self.next.get(prefix, [EOS])
         return [EOS] if len(prefix) == self.length else [PAD]
+
+
+class TrieConstraint(LogitsProcessor):
+    """Masks every beam to valid SID continuations with ONE device->host copy per step."""
+
+    def __init__(self, trie):
+        self.trie = trie
+
+    def __call__(self, input_ids, scores):
+        rows, cols = [], []
+        for i, sequence in enumerate(input_ids[:, 1:].cpu().tolist()):  # drop decoder start token
+            allowed = self.trie.allowed(tuple(sequence))
+            rows.extend([i] * len(allowed))
+            cols.extend(allowed)
+        mask = torch.full_like(scores, -torch.inf)
+        mask[torch.as_tensor(rows, device=scores.device), torch.as_tensor(cols, device=scores.device)] = 0
+        return scores + mask
 
 
 @torch.no_grad()
@@ -73,7 +89,8 @@ def evaluate(model, samples, tokens, trie, cfg, max_history, train_items, device
         batch = samples[start:start+cfg.eval_batch_size]
         source, mask, _ = collate([rec_example(s, tokens, max_history) for s in batch], device)
         out = model.generate(input_ids=source, attention_mask=mask, num_beams=cfg.beam, num_return_sequences=top,
-                             max_new_tokens=trie.length+1, prefix_allowed_tokens_fn=trie.allowed, do_sample=False)
+                             max_new_tokens=trie.length+1, logits_processor=LogitsProcessorList([TrieConstraint(trie)]),
+                             do_sample=False)
         out = out[:, 1:1+trie.length].cpu().tolist()
         for i, sample in enumerate(batch):
             predicted = [trie.item.get(tuple(seq), -1) for seq in out[i*top:(i+1)*top]]

@@ -6,6 +6,7 @@ Expected files in data_dir (item IDs are 0..n-1 and equal embedding rows):
       train.inter holds prefix samples; valid/test are leave-one-out samples.
   {dataset}.item.json   (optional) {item_id: {...}} — defines n_items when present
   text / image embedding .npy files, [n_items, d].
+  optional {dataset}.text-mask.npy / .image-mask.npy, bool [n_items] (False = missing embedding).
 """
 from __future__ import annotations
 
@@ -34,6 +35,8 @@ class Dataset:
     image: np.ndarray
     interactions: sparse.csr_matrix  # users x items, train split only
     train_items: np.ndarray  # bool [n_items]: appears in train split (warm)
+    text_mask: np.ndarray  # bool [n_items]: embedding present
+    image_mask: np.ndarray
 
 
 def read_inter(path):
@@ -76,8 +79,15 @@ def load_dataset(cfg) -> Dataset:
     a.sum_duplicates()
     a.data[:] = 1
     train_items = np.asarray(a.sum(0)).ravel() > 0
+    masks = []
+    for pattern in (cfg.text_mask, cfg.image_mask):
+        path = root / pattern.format(dataset=name)
+        mask = np.load(path).astype(bool) if path.exists() else np.ones(n_items, dtype=bool)
+        if mask.shape != (n_items,):
+            raise ValueError(f"{path} must have shape ({n_items},)")
+        masks.append(mask)
     return Dataset(n_items, splits["train"], splits["valid"], splits["test"],
-                   np.array(text, dtype=np.float32), np.array(image, dtype=np.float32), a, train_items)
+                   np.array(text, dtype=np.float32), np.array(image, dtype=np.float32), a, train_items, *masks)
 
 
 def make_synthetic_dataset(root, name="Synth", *, n_items=240, n_users=300, seed=0):

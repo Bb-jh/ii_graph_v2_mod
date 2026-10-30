@@ -47,6 +47,9 @@ def run(data, graph, pseudo, cfg, out: Path, device):
     conf = graph_teacher_confidence(graph, pseudo["h"], labels, tau_s=cfg.tau_s, eps=cfg.eps)
     m_t, valid = full_compatibility(data.text, labels, cfg.compat_temperature, cfg.chunk_size, device)
     m_v, _ = full_compatibility(data.image, labels, cfg.compat_temperature, cfg.chunk_size, device)
+    # Missing modality embedding -> M=0, i.e. no guidance for that modality.
+    m_t *= data.text_mask[:, None]
+    m_v *= data.image_mask[:, None]
     np.savez_compressed(out / "gates.npz", C=conf["confidence"], A=conf["assignment"], T=conf["topology"],
                         S=conf["support"], neighbor_count=conf["neighbor_count"], M_T=m_t, M_V=m_v, valid=valid)
     labeled = labels[:, 0] >= 0

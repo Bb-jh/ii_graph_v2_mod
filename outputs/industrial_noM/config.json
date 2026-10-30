@@ -1,0 +1,113 @@
+{
+  "seed": 42,
+  "device": "cuda",
+  "data": {
+    "data_dir": "data/Industrial",
+    "dataset": "Industrial",
+    "text_emb": "{dataset}.emb-text.npy",
+    "image_emb": "{dataset}.emb-image.npy",
+    "text_mask": "{dataset}.text-mask.npy",
+    "image_mask": "{dataset}.image-mask.npy",
+    "max_history": 20
+  },
+  "graph": {
+    "min_cooc": 1,
+    "top_k": 20,
+    "reliability": "mean",
+    "lambda_mm": 0.3
+  },
+  "pseudo": {
+    "dim": 64,
+    "layers": 3,
+    "epochs": 100,
+    "batch_size": 4096,
+    "lr": 0.001,
+    "reg": 0.0001,
+    "ks": [
+      8,
+      4,
+      4
+    ],
+    "min_cluster_size": 5,
+    "kmeans_init": 10
+  },
+  "gates": {
+    "eps": 1e-12,
+    "tau_s": [
+      5.0,
+      5.0,
+      5.0
+    ],
+    "compat_temperature": 0.1,
+    "chunk_size": 512
+  },
+  "tokenizer": {
+    "hidden": [
+      512,
+      256,
+      128
+    ],
+    "latent_dim": 32,
+    "codebook_size": 256,
+    "levels": 3,
+    "beta": 0.25,
+    "gnn_hidden": 256,
+    "gnn_layers": 2,
+    "edge_drop": true,
+    "edge_p": 0.2,
+    "node_p": 0.1,
+    "epochs": 200,
+    "batch_size": 1024,
+    "labeled_fraction": 0.5,
+    "per_fine": 4,
+    "fines_per_local": 2,
+    "locals_per_global": 2,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "tau": 0.1,
+    "tau_q": 1.0,
+    "ema_momentum": 0.9,
+    "lambda_max": 0.5,
+    "warmup_start": 30,
+    "warmup_ramp": 50,
+    "log_every": 10
+  },
+  "guidance": {
+    "mode": "adaptive",
+    "components": [
+      "C",
+      "R",
+      "N"
+    ],
+    "fixed_levels": [
+      2,
+      3
+    ]
+  },
+  "sid": {
+    "use_graph": true,
+    "order": [
+      "T",
+      "G",
+      "V"
+    ]
+  },
+  "rec": {
+    "d_model": 128,
+    "d_ff": 1024,
+    "d_kv": 64,
+    "layers": 4,
+    "heads": 6,
+    "dropout": 0.1,
+    "alignment": true,
+    "epochs": 200,
+    "batch_size": 256,
+    "lr": 0.001,
+    "warmup_steps": 1000,
+    "eval_every": 5,
+    "patience": 5,
+    "beam": 20,
+    "eval_batch_size": 64,
+    "max_eval_users": 5000
+  }
+}

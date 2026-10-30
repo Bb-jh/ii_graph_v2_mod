@@ -5,6 +5,10 @@ __pycache__/
 *.pyc
 /artifacts/embeddings/
 *.log
+!/outputs/industrial_*.log
+# Pipeline run artifacts: keep metrics/stats/logs, not checkpoints or arrays (reproducible from config).
+/outputs/*/s*_*/*.pt
+/outputs/*/s*_*/*.npz
 
 /datasets/
 /cache/

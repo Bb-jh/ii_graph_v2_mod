@@ -1,0 +1,11 @@
+{
+  "candidate_edges": 1566866,
+  "M_mean": 0.5591017603874207,
+  "nodes": 25848,
+  "edges": 300155,
+  "components": 95,
+  "largest_component": 25754,
+  "lcc_fraction": 0.9963633549984525,
+  "isolated": 94,
+  "mean_degree": 23.22462086041473
+}

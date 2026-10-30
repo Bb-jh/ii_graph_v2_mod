@@ -1,0 +1,7 @@
+{
+  "split": "data/Industrial test (50,985 users), same as industrial_main / industrial_noM",
+  "computed": "2026-10-29, ad hoc script (not part of run_pipeline.py)",
+  "popularity_excluding_history": {"HR@1": 0.00296, "HR@5": 0.01026, "HR@10": 0.01736, "NDCG@5": 0.00654, "NDCG@10": 0.00876},
+  "graph_W_neighbors_of_last_3_items": {"HR@1": 0.0061, "HR@5": 0.01377, "HR@10": 0.01869, "NDCG@5": 0.01002, "NDCG@10": 0.01161,
+    "note": "top-weight neighbors in outputs/industrial_main/s1_graph/graph.npz, last history item first, popularity fill-in"}
+}

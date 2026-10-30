@@ -1,0 +1,10 @@
+{
+  "items": 25848,
+  "tokens_per_item": 10,
+  "vocab_size": 2320,
+  "collided_items": 448,
+  "collision_rate": 0.017332095326524296,
+  "max_dedup": 10,
+  "unique_before_dedup": 25400,
+  "cold_items": 94
+}

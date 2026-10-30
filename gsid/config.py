@@ -12,6 +12,9 @@ class DataCfg:
     # MACRec layout: {dataset}.{train,valid,test}.inter, {dataset}.item.json, embedding NPYs (row = item ID).
     text_emb: str = "{dataset}.emb-llama-td.npy"
     image_emb: str = "{dataset}.emb-ViT-L-14.npy"
+    # Optional bool [n_items] masks (False = embedding missing); absent files mean all present.
+    text_mask: str = "{dataset}.text-mask.npy"
+    image_mask: str = "{dataset}.image-mask.npy"
     max_history: int = 20
 
 
