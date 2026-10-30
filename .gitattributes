@@ -2,3 +2,5 @@ shared_data/Industrial_and_Scientific/5core_v2/*.npz filter=lfs diff=lfs merge=l
 shared_data/Musical_Instruments/5core_v2/*.npz filter=lfs diff=lfs merge=lfs -text
 artifacts/embeddings/Office_Products/full/*.npz filter=lfs diff=lfs merge=lfs -text
 artifacts/embeddings/Office_Products/full/parts/*.part* filter=lfs diff=lfs merge=lfs -text
+shared_data/Office_Products/5core_v3/*.jsonl filter=lfs diff=lfs merge=lfs -text
+shared_data/Office_Products/5core_v3/*.tsv filter=lfs diff=lfs merge=lfs -text

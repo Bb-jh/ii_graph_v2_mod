@@ -1,0 +1,20 @@
+{
+  "variant": "5core",
+  "statistics": {
+    "interactions": 1800878,
+    "users": 223308,
+    "items": 77551
+  },
+  "output_counts": {
+    "full": 1800878,
+    "train": 1354262,
+    "valid": 223308,
+    "test": 223308,
+    "eligible_users": 223308,
+    "excluded_short_users": 0
+  },
+  "split_policy": "chronological leave-last-two-out per user; users with <3 interactions excluded from splits; full retains all",
+  "five_core_policy": "iteratively filter users and items with <5 interactions; performed before split (transductive dataset filtering)",
+  "duplicates": "all review events retained; equal timestamps ordered by original file order",
+  "graph_policy": "construct behavior graph from train.jsonl only; no validation/test edges"
+}
