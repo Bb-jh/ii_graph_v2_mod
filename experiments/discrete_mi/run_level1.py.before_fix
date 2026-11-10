@@ -1,0 +1,321 @@
+#!/usr/bin/env python3
+"""E2: level-1 RQ-only vs InfoNCE vs pair-code-MI, independent per modality.
+Does NOT implement pseudo-label MI or hierarchical conditional MI.
+"""
+import os
+os.environ.setdefault('OMP_NUM_THREADS','4')
+import argparse, csv, json, random, sys, hashlib
+from pathlib import Path
+import numpy as np
+import torch
+from torch import nn
+from torch.nn import functional as F
+from sklearn.metrics import roc_auc_score, average_precision_score
+from sklearn.neighbors import NearestNeighbors
+
+ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'experiments'/'offdiag'))
+import run_offdiag_v1 as old
+
+METHODS=('rq','infonce','code_mi')
+def parser():
+ p=argparse.ArgumentParser()
+ p.add_argument('--domain',choices=['Industrial','Musical'],required=True)
+ p.add_argument('--seed',type=int,default=42)
+ p.add_argument('--k',type=int,default=256)
+ p.add_argument('--dim',type=int,default=64)
+ p.add_argument('--steps',type=int,default=1200)
+ p.add_argument('--batch',type=int,default=512)
+ p.add_argument('--lr',type=float,default=0.001)
+ p.add_argument('--temperature',type=float,default=0.2)
+ p.add_argument('--soft-temperature',type=float,default=0.5)
+ p.add_argument('--lambda-grid',default='0.01,0.1,1.0')
+ p.add_argument('--eval-every',type=int,default=200)
+ p.add_argument('--eval-positives',type=int,default=30000)
+ p.add_argument('--bootstrap',type=int,default=500)
+ p.add_argument('--nulls',type=int,default=100)
+ p.add_argument('--swaps-per-edge',type=float,default=2.)
+ p.add_argument('--modality',choices=['text','image','both'],default='both')
+ p.add_argument('--out-root',default='outputs/discrete_mi_level1_v1')
+ p.add_argument('--device',default='cpu')
+ p.add_argument('--dry-run',action='store_true')
+ return p.parse_args()
+
+def seed_all(seed):
+ random.seed(seed);np.random.seed(seed);torch.manual_seed(seed)
+ torch.use_deterministic_algorithms(True, warn_only=True)
+
+def make_data(a):
+ dataset,seqname=old.DOMAINS[a.domain]
+ mapping=ROOT/'shared_data'/dataset/'5core_v2'/'item_mapping.tsv'
+ embfile=ROOT/'artifacts'/'embeddings'/dataset/'full'/'clip_vit_b32.npz'
+ seq=Path.home()/'datasets'/'baseline_sequences'/seqname
+ files=[mapping,embfile,seq,ROOT/'experiments'/'offdiag'/'run_offdiag_v1.py']
+ print('CHECK INPUTS:',[(str(p),p.is_file()) for p in files],flush=True)
+ if not all(p.is_file() for p in files):raise FileNotFoundError('Missing input')
+ if a.dry_run:return None
+ ids=old.load_mapping(mapping);n=len(ids)
+ _,seqs=old.read_users_train(seq,n)
+ groups,strata=old.split_stratified(seqs,a.seed)
+ xs=[old.csr_users([seqs[int(i)] for i in grp],n) for grp in groups]
+ emb=old.load_embeddings(embfile,ids)
+ eligible=np.flatnonzero(emb['text'][1]&emb['image'][1]).astype(np.int32)
+ train_items=eligible[np.asarray(xs[0][:,eligible].sum(axis=0)).ravel()>0]
+ if len(train_items)<a.k:raise ValueError('U1 items fewer than K')
+ edges=[old.edges_from_users(x,eligible) for x in xs]
+ e1,e2,e3=edges
+ keys=[set(old.keypair(e[0],e[1],n).tolist()) for e in edges]
+ known=set.union(*keys)
+ deg=e1[3];positive_deg=deg[deg>0]
+ bins=np.r_[0,np.unique(np.quantile(positive_deg,[.2,.4,.6,.8]))]
+ def candidates(e,ban,offset):
+  idx=np.flatnonzero(~np.isin(old.keypair(e[0],e[1],n),np.fromiter(ban,dtype=np.int64)))
+  rng=np.random.default_rng(a.seed+offset)
+  if len(idx)>a.eval_positives:idx=rng.choice(idx,size=a.eval_positives,replace=False)
+  x=e[0][idx];y=e[1][idx]
+  keep,na,nb=old.sample_negatives(x,y,known,deg,bins,n,eligible,a.seed+offset+100)
+  x=x[keep];y=y[keep]
+  if len(x)<100:raise RuntimeError('Too few positive candidates')
+  aa=np.r_[x,na];bb=np.r_[y,nb];lab=np.r_[np.ones(len(x),dtype=np.uint8),np.zeros(len(na),dtype=np.uint8)]
+  return (aa,bb,lab)
+ u2=candidates(e2,keys[0],200);u3=candidates(e3,keys[0]|keys[1],300)
+ print('U1/U2/U3 users:',[len(g) for g in groups],'edges:',[len(e[0]) for e in edges], 'evaluation positive:',int(u2[2].sum()),int(u3[2].sum()),flush=True)
+ return dict(n=n,emb=emb,eligible=eligible,train_items=train_items,edges=edges,u2=u2,u3=u3,groups=groups,strata=strata)
+
+class VQ(nn.Module):
+ def __init__(self,d_in,d,k):
+  super().__init__()
+  self.encoder=nn.Linear(d_in,d)
+  self.codebook=nn.Parameter(torch.randn(k,d)*0.1)
+  self.decoder=nn.Linear(d,d_in)
+  self.k=k
+ def forward(self,x,temperature):
+  h=F.normalize(self.encoder(x),dim=-1)
+  cb=F.normalize(self.codebook,dim=-1)
+  logits=h@cb.T/temperature
+  q=logits.softmax(-1)
+  idx=logits.argmax(-1)
+  hard=F.one_hot(idx,self.k).to(q.dtype)
+  z=(hard-q).detach()@cb + q@cb
+  rec=self.decoder(z)
+  return h,z,q,idx,rec
+
+
+def train_candidate(a,mod,z,train_items,e1,method,lam,initial,outdir,dev):
+ seed_all(a.seed+101)
+ model=VQ(z.shape[1],a.dim,a.k).to(dev);model.load_state_dict(initial)
+ opt=torch.optim.Adam(model.parameters(),lr=a.lr)
+ x=torch.as_tensor(z,device=dev,dtype=torch.float32)
+ eligible=train_items.astype(np.int64)
+ rng=np.random.default_rng(a.seed+987)
+ # Train edges restricted to U1 items; all U1 edges already have eligible CLIP endpoints.
+ logs=[]
+ edge_a,edge_b,edge_w,_=e1
+ all_ix=rng.choice(len(edge_a),size=a.steps*a.batch,replace=True,p=edge_w/edge_w.sum())
+ for step in range(1,a.steps+1):
+  batch_ix=all_ix[(step-1)*a.batch:step*a.batch]
+  pa,pb=edge_a[batch_ix],edge_b[batch_ix]
+  # Content reconstruction trained on BOTH endpoints; no held-out U2/U3 labels.
+  ids=np.r_[pa,pb]
+  h,qz,q,idx,rec=model(x[ids],a.soft_temperature)
+  recon=F.mse_loss(rec,x[ids])
+  cb=F.normalize(model.codebook,dim=-1)
+  commit=((h-cb[idx].detach())**2).mean()
+  loss=recon+0.25*commit
+  if method=='infonce':
+   hu=h[:a.batch];hv=h[a.batch:]
+   logits=(hu@hv.T)/a.temperature
+   target=torch.arange(a.batch,device=dev)
+   task=(F.cross_entropy(logits,target)+F.cross_entropy(logits.T,target))/2
+   loss=loss+lam*task
+  elif method=='code_mi':
+   qu=q[:a.batch];qv=q[a.batch:]
+   # Symmetric differentiable code joint; minibatch PMI intentionally can be noisy.
+   joint=(qu.T@qv+qv.T@qu)/(2*a.batch)
+   marginal=joint.sum(1)
+   mi=(joint*(joint.clamp_min(1e-10).log()-(marginal[:,None]*marginal[None,:]).clamp_min(1e-10).log())).sum()
+   task=-mi
+   loss=loss+lam*task
+  else:task=loss.detach()*0
+  opt.zero_grad(set_to_none=True);loss.backward();nn.utils.clip_grad_norm_(model.parameters(),5.);opt.step()
+  if step==1 or step%a.eval_every==0 or step==a.steps:
+   logs.append(dict(step=step,loss=float(loss.detach()),recon=float(recon.detach()),task=float(task.detach())))
+   print(mod,method,'lambda',lam,'step',step,'loss',round(logs[-1]['loss'],5),'task',round(logs[-1]['task'],5),flush=True)
+ return model,logs
+
+@torch.no_grad()
+def encode(model,z,device,temp,batch=4096):
+ xx=torch.as_tensor(z,dtype=torch.float32)
+ codes=[];hs=[]
+ model.eval()
+ for i in range(0,len(z),batch):
+  h,_,_,idx,_=model(xx[i:i+batch].to(device),temp)
+  codes.append(idx.cpu().numpy());hs.append(h.cpu().numpy())
+ return np.concatenate(codes).astype(np.int32),np.concatenate(hs).astype(np.float32)
+
+def measure_validation(c,u2,e1,k):
+ # U2 full PMI AUC selects lambda/epoch. alpha selected by U2, never U3.
+ P=old.code_joint(c,*e1[:3],k)*np.sum(e1[2]);va={}
+ for alpha in (0.1,1.,10.):
+  joint=P+alpha;joint=joint/joint.sum()
+  _,_,scores=old.score_pmi(c,u2[0],u2[1],joint)
+  va[str(alpha)]=float(roc_auc_score(u2[2],scores))
+ alpha=max((.1,1.,10.),key=lambda t:(va[str(t)],-t))
+ return alpha,va[str(alpha)],va
+
+def code_metrics(c,e1,e3,u2,u3,alpha,k,z,continuous,n,bootstrap,seed,eligible):
+ p3=old.code_joint(c,*e3[:3],k);m=old.measures(p3)
+ P1=old.code_joint(c,*e1[:3],k)*np.sum(e1[2]);joint=P1+alpha;joint/=joint.sum()
+ y=u3[2];a,b=u3[:2]
+ same,diag,full=old.score_pmi(c,a,b,joint)
+ cos=np.einsum('ij,ij->i',continuous[a],continuous[b],optimize=True)
+ scores=dict(same=same,diagonal=diag,full=full,cosine=cos)
+ aucs={q:float(roc_auc_score(y,v)) for q,v in scores.items()}
+ aps={q:float(average_precision_score(y,v)) for q,v in scores.items()}
+ ci=old.auc_ci_item(y,full,diag,a,b,n,seed,bootstrap)
+ pos=cos[y==1];neg=cos[y==0]
+ # Held-out positive pairs: evaluate normalized contrastive loss in blocks.
+ pa=a[y==1][:min(2048,int(y.sum()))]; pb=b[y==1][:min(2048,int(y.sum()))]
+ losses=[]
+ for start in range(0,len(pa),256):
+  xx=continuous[pa[start:start+256]];yy=continuous[pb[start:start+256]]
+  v=(xx@yy.T)/0.2
+  m=np.max(v,axis=1,keepdims=True)
+  logprob=np.diag(v)-(m[:,0]+np.log(np.exp(v-m).sum(axis=1)))
+  losses.append((-logprob).sum())
+ infonce_eval=float(sum(losses)/len(pa)) if len(pa) else float('nan')
+ # Same-item-pool top-10 neighbor overlap: raw CLIP vs trained continuous embedding.
+ pool=np.random.default_rng(seed+998).choice(eligible,size=min(1200,len(eligible)),replace=False)
+ raw_sim=z[pool]@z[pool].T
+ learned_sim=continuous[pool]@continuous[pool].T
+ np.fill_diagonal(raw_sim,-np.inf);np.fill_diagonal(learned_sim,-np.inf)
+ top=min(10,len(pool)-1)
+ raw_idx=np.argpartition(-raw_sim,kth=top-1,axis=1)[:,:top]
+ learn_idx=np.argpartition(-learned_sim,kth=top-1,axis=1)[:,:top]
+ neighbor_overlap=float(np.mean([len(set(x.tolist())&set(y.tolist()))/top for x,y in zip(raw_idx,learn_idx)]))
+ use=np.bincount(c[eligible],minlength=k).astype(np.float64)/len(eligible)
+ ent=float(-(use[use>0]*np.log(use[use>0])).sum())
+ return dict(**m,code_mi=m['mi_real'],transition_auc=aucs['full'],diagonal_pmi_auc=aucs['diagonal'],same_code_auc=aucs['same'],cosine_auc=aucs['cosine'],transition_ap=aps['full'],diagonal_pmi_ap=aps['diagonal'],same_code_ap=aps['same'],cosine_ap=aps['cosine'],delta_auc=aucs['full']-aucs['diagonal'],delta_auc_ci_low=ci[0],delta_auc_ci_high=ci[1],continuous_cosine_gap=float(pos.mean()-neg.mean()),infonce_eval_loss=infonce_eval,neighbor_overlap_at10=neighbor_overlap,codebook_usage=float((use>0).mean()),code_entropy=ent,perplexity=float(np.exp(ent)),n_used_codes=int((use>0).sum()))
+
+def make_null(e3,nulls,swaps,seed):
+ a,b,w,_=e3;rng=np.random.default_rng(seed+10000);nsw=int(len(a)*swaps)
+ na,nb=a.copy(),b.copy();out=[];completed=[]
+ for i in range(nulls):
+  na,nb,done,attempt=old.swap_graph(na,nb,rng,nsw)
+  out.append((na.copy(),nb.copy()));completed.append(done/max(nsw,1))
+  if (i+1)%10==0:print('null',i+1,'/',nulls,flush=True)
+ return out,float(np.mean(completed))
+
+def null_metrics(c,e3,k,nulls,bootstrap,seed):
+ a,b,w,_=e3
+ real=old.measures(old.code_joint(c,a,b,w,k))
+ values=np.array([old.measures(old.code_joint(c,na,nb,w,k))['i_off'] for na,nb in nulls])
+ delta=real['i_off']-values.mean();p=(1+np.sum(values>=real['i_off']))/(len(values)+1)
+ # same bootstrap definition as Experiment 1 (item Poisson + one random null graph)
+ rng=np.random.default_rng(seed+20000);n=len(c);bo=[]
+ for _ in range(bootstrap):
+  weight=rng.poisson(1,size=n)
+  r=old.measures(old.code_joint(c,a,b,w*weight[a]*weight[b],k))['i_off']
+  na,nb=nulls[int(rng.integers(len(nulls)))]
+  nm=old.measures(old.code_joint(c,na,nb,w*weight[na]*weight[nb],k))['i_off']
+  bo.append(r-nm)
+ ci=np.quantile(bo,[.025,.975])
+ return dict(i_off_null_mean=float(values.mean()),delta_off=float(delta),offdiag_p_null=float(p),delta_off_ci_low=float(ci[0]),delta_off_ci_high=float(ci[1]))
+
+def main():
+ a=parser();seed_all(a.seed)
+ if a.steps<1 or a.batch<2:raise ValueError('invalid steps/batch')
+ if a.device.startswith('cuda') and not torch.cuda.is_available():raise RuntimeError('Requested CUDA not available')
+ dat=make_data(a)
+ if a.dry_run:
+  print('CHECK PASS');return
+ device=torch.device(a.device)
+ dom=ROOT/a.out_root/f'{a.domain}_K{a.k}_seed{a.seed}'
+ if dom.exists() and (dom/'DONE.json').exists():raise FileExistsError('Refusing to overwrite completed '+str(dom))
+ if dom.exists():raise FileExistsError('Output folder exists (partial run). Inspect first: '+str(dom))
+ dom.mkdir(parents=True)
+ (dom/'config.json').write_text(json.dumps(vars(a),indent=2)+'\n')
+ lamgrid=tuple(float(t) for t in a.lambda_grid.split(','))
+ if not lamgrid or any(v<0 for v in lamgrid):raise ValueError('invalid lambda-grid')
+ allrows=[];selected=[]
+ for mod in (['text','image'] if a.modality=='both' else [a.modality]):
+  z=old.norm(dat['emb'][mod][0]);n=len(z);train=dat['train_items'];e1,e2,e3=dat['edges']
+  seed_all(a.seed+101)
+  initial=VQ(z.shape[1],a.dim,a.k).state_dict()
+  moddir=dom/mod;moddir.mkdir()
+  candidate_summary=[];winner_models={}
+  for method in METHODS:
+   candidates=[0.] if method=='rq' else lamgrid
+   best=None
+   for lam in candidates:
+    tag=f'{method}_lambda{lam:g}'
+    model,logs=train_candidate(a,mod,z,train,e1,method,lam,initial,moddir,device)
+    codes,h=encode(model,z,device,a.soft_temperature)
+    alpha,val,alpha_aucs=measure_validation(codes,dat['u2'],e1,a.k)
+    # U2 is used for model selection, no U3 evaluated until all candidates selected.
+    entry=dict(method=method,lam=lam,u2_transition_auc=val,alpha=alpha,alpha_u2_aucs=alpha_aucs,training=logs)
+    candidate_summary.append(entry)
+    print('SELECT CANDIDATE',mod,tag,'U2 AUC',round(val,5),'alpha',alpha,flush=True)
+    if best is None or val>best[0]+1e-12 or (abs(val-best[0])<1e-12 and lam<best[1]):
+     best=(val,lam,model,codes,h,alpha,tag)
+   assert best is not None
+   _,lam,model,codes,h,alpha,tag=best
+   torch.save(dict(model=model.state_dict(),config=vars(a),modality=mod,method=method,lam=lam),moddir/f'{method}_selected.pt')
+   np.save(moddir/f'{method}_codes.npy',codes)
+   metrics=code_metrics(codes,e1,e3,dat['u2'],dat['u3'],alpha,a.k,z,h,n,a.bootstrap,a.seed+400+len(selected),dat['eligible'])
+   row=dict(domain=a.domain,modality=mod,method=method,lambda_selected=lam,alpha_selected=alpha,seed=a.seed,k=a.k,u2_selection_auc=best[0],n_u3_eval_pos=int(dat['u3'][2].sum()),n_u3_eval_neg=int((1-dat['u3'][2]).sum()),**metrics)
+   allrows.append(row);selected.append((mod,method,codes,row))
+   print('U3',mod,method,'J',round(row['code_mi'],5),'transition AUC',round(row['transition_auc'],5),'delta AUC',round(row['delta_auc'],5),flush=True)
+  # Frozen content K-means baseline from Experiment 1, when available.
+  km_path=ROOT/'outputs'/'offdiag_analysis_v1'/f'{a.domain}_CLIP_K{a.k}_seed{a.seed}'/f'{mod}_codes.npy'
+  if km_path.is_file():
+   km_codes=np.load(km_path).astype(np.int32)
+   if len(km_codes)!=n:raise ValueError('K-means baseline code count mismatch')
+   km_alpha,km_val,_=measure_validation(km_codes,dat['u2'],e1,a.k)
+   np.save(moddir/'kmeans_codes.npy',km_codes)
+   kmmetrics=code_metrics(km_codes,e1,e3,dat['u2'],dat['u3'],km_alpha,a.k,z,z,n,a.bootstrap,a.seed+450+len(selected),dat['eligible'])
+   kmrow=dict(domain=a.domain,modality=mod,method='kmeans',lambda_selected=0.,alpha_selected=km_alpha,seed=a.seed,k=a.k,u2_selection_auc=km_val,n_u3_eval_pos=int(dat['u3'][2].sum()),n_u3_eval_neg=int((1-dat['u3'][2]).sum()),**kmmetrics)
+   allrows.append(kmrow);selected.append((mod,'kmeans',km_codes,kmrow))
+   print('KMEANS BASELINE',mod,'J',round(kmrow['code_mi'],5),'AUC',round(kmrow['transition_auc'],5),flush=True)
+  else:
+   print('KMEANS BASELINE not found at',km_path,'; leaving out',flush=True)
+  (moddir/'u2_candidate_search.json').write_text(json.dumps(candidate_summary,indent=2)+'\n')
+ # Null analysis must never change selected hyperparameters.
+ nulls,swap_completion=make_null(dat['edges'][2],a.nulls,a.swaps_per_edge,a.seed)
+ for mod,method,codes,row in selected:
+  row.update(null_metrics(codes,dat['edges'][2],a.k,nulls,a.bootstrap,a.seed+1000+len(allrows)))
+ # Paired U3 comparisons use the same edge sample and item-bootstrap weights.
+ pairrows=[]
+ e3=dat['edges'][2]; a3,b3,w3,_=e3; n=dat['n']
+ for mod in (['text','image'] if a.modality=='both' else [a.modality]):
+  within={method:(codes,row) for m,method,codes,row in selected if m==mod}
+  for lhs,rhs in [('code_mi','infonce'),('code_mi','rq'),('infonce','rq')]:
+   cl,rl=within[lhs];cr,rr=within[rhs]
+   observed_j=rl['code_mi']-rr['code_mi']
+   rng=np.random.default_rng(a.seed+7400+(['text','image'].index(mod))*10+len(pairrows))
+   distribution=[]
+   for _ in range(a.bootstrap):
+    itemweights=rng.poisson(1,size=n)
+    weights=w3*itemweights[a3]*itemweights[b3]
+    if weights.sum()<=0:continue
+    jl=old.measures(old.code_joint(cl,a3,b3,weights,a.k))['mi_real']
+    jr=old.measures(old.code_joint(cr,a3,b3,weights,a.k))['mi_real']
+    distribution.append(jl-jr)
+   ci_j=np.quantile(distribution,[.025,.975]) if len(distribution)>10 else [float('nan')]*2
+   # Reconstruct identical held-out scores for paired AUC CI using selected U1 alpha.
+   def full_score(c,alpha):
+    P=old.code_joint(c,*dat['edges'][0][:3],a.k)*sum(dat['edges'][0][2]);P+=alpha;P/=P.sum()
+    return old.score_pmi(c,dat['u3'][0],dat['u3'][1],P)[2]
+   sl=full_score(cl,rl['alpha_selected']);sr=full_score(cr,rr['alpha_selected'])
+   ci_auc=old.auc_ci_item(dat['u3'][2],sl,sr,dat['u3'][0],dat['u3'][1],n,a.seed+8300+len(pairrows),a.bootstrap)
+   pairrows.append(dict(domain=a.domain,modality=mod,lhs=lhs,rhs=rhs,J_diff=observed_j,J_diff_ci_low=float(ci_j[0]),J_diff_ci_high=float(ci_j[1]),transition_auc_diff=rl['transition_auc']-rr['transition_auc'],transition_auc_diff_ci_low=ci_auc[0],transition_auc_diff_ci_high=ci_auc[1]))
+ with (dom/'paired_comparisons.csv').open('w',newline='') as f:
+  writer=csv.DictWriter(f,fieldnames=list(pairrows[0]));writer.writeheader();writer.writerows(pairrows)
+ with (dom/'summary.csv').open('w',newline='') as f:
+  w=csv.DictWriter(f,fieldnames=list(allrows[0]));w.writeheader();w.writerows(allrows)
+ manifest=dict(protocol='EXP2_LEVEL1_V1',data_split='Utility v2 split_stratified, U1 50 U2 25 U3 25',positive='all nonzero binary user co-occurrence pairs; W_B cosine user incidence',validation='U2 new pairs; selected lambda and smoothing by U2 full PMI AUC',test='U3 new pairs excluded if in U1 or U2; 4 degree-bin matched negatives per positive; same candidates for all methods',code_mi='weighted U3 joint MI in nats; finite sample bias (compare null-adjusted delta_off)',null='Experiment 1 binary-degree-preserving edge-slot-weight rewires; weighted item strength not preserved',bootstrap='Poisson item-weight bootstrap; same caveats as Experiment 1',caveats=['This is a level-1 VQ prototype, not full residual RQ-VAE.','Code-pair MI directly optimized only for code_mi method; pseudo-label MI is NOT implemented.','U3 code MI is measured on full U3 graph and differs from held-out edge predictive task.','No item-disjoint cold-label probe here.','Continuous InfoNCE in-batch negatives may contain behavioral positives.'],null_mean_swap_completion=swap_completion,selected=[dict(modality=m,method=s,lam=r['lambda_selected'],alpha=r['alpha_selected']) for m,s,c,r in selected])
+ (dom/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+ (dom/'DONE.json').write_text(json.dumps(dict(status='success',rows=len(allrows)))+'\n')
+ print('SUCCESS',dom,'rows=',len(allrows),flush=True)
+
+if __name__=='__main__':main()
