@@ -1,0 +1,51 @@
+{
+  "protocol": "RCH_NEXT_AUDIT_V1",
+  "domain": "Industrial",
+  "seed": 42,
+  "git_commit": "e39799f8178d5e5591863ef6c5eecad3480d5b8c",
+  "config": {
+    "domain": "Industrial",
+    "seed": 42,
+    "part": "u3",
+    "mode": "run",
+    "jobs": 4,
+    "out_root": "outputs/rch_next_audit_v1",
+    "spectral_dim": 40,
+    "recursive_dim": 12,
+    "folds": 5,
+    "permutations": 5,
+    "bootstrap": 500,
+    "max_items": 12000,
+    "force": false
+  },
+  "cfg": {
+    "folds": 5,
+    "permutations": 5,
+    "bootstrap": 500,
+    "c_grid": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "max_iter": 300,
+    "max_items": 12000,
+    "min_items": 60,
+    "min_child": 5,
+    "eps": 0.05,
+    "delta_grid": [
+      0.01,
+      0.02,
+      0.05
+    ],
+    "delta_rel": 0.02,
+    "delta_abs": 0.005
+  },
+  "root": "behavior_spectral_k4_s0",
+  "known_limitations": [
+    "The P1 spectral embedding uses 40 eigenvectors even when k=4: full U1 normalized adjacency.",
+    "Graph U1 transductively includes probe-heldout items; not true cold-item evaluation.",
+    "Bootstrap CI is item-bootstrap of heldout CE, not a formal conditional permutation p-value.",
+    "Different local modularities across node sizes are not directly comparable.",
+    "U3 locked root is final one-time check; must not be used for root hyperparameter selection."
+  ]
+}
